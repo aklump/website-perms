@@ -25,7 +25,7 @@ function on_pre_config() {
         done
         has_failed && exit_with_failure
         echo_green_list
-        exit_with_success "$(get_title) is installed."
+        exit_with_success "Installation complete."
     fi
 }
 
