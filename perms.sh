@@ -14,7 +14,7 @@ CONFIG="perms.yml";
 # TODO: Event handlers and other functions go here or source another file.
 
 # Begin Cloudy Bootstrap
-s="${BASH_SOURCE[0]}";while [ -h "$s" ];do dir="$(cd -P "$(dirname "$s")" && pwd)";s="$(readlink "$s")";[[ $s != /* ]] && s="$dir/$s";done;r="$(cd -P "$(dirname "$s")" && pwd)";source "$r/cloudy/cloudy.sh"
+s="${BASH_SOURCE[0]}";while [ -h "$s" ];do dir="$(cd -P "$(dirname "$s")" && pwd)";s="$(readlink "$s")";[[ $s != /* ]] && s="$dir/$s";done;r="$(cd -P "$(dirname "$s")" && pwd)";source "$r/../cloudy/cloudy.sh"
 # End Cloudy Bootstrap
 
 # Input validation.
@@ -26,12 +26,24 @@ implement_cloudy_basic
 command=$(get_command)
 case $command in
 
-    "command")
+    "install")
+        install_source="$ROOT/install"
+        bin_dir=$(realpath "$ROOT/../..")
 
-    # TODO: Write the code to handle this command here.
+        # Create symlink in bin/perms
+        [ -s "$bin_dir/perms" ] || ln -s "$install_source/perms.sh" "$bin_dir/perms" || fail_because "Could not create symlink $bin_dir/perms"
 
-    has_failed && exit_with_failure
-    exit_with_success
+        # Copy over user files.
+        list_clear
+        for file in "$(ls $install_source)"; do
+            if [ ! -e $bin_dir/$file ]; then
+                cp $install_source/$file $bin_dir/$file && list_add "$file created" || fail_because "Could not copy $file"
+            fi
+        done
+        echo_green_list
+
+        has_failed && exit_with_failure
+        exit_with_success
     ;;
 
 esac

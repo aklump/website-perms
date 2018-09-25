@@ -7,6 +7,8 @@ commands:
   clear-cache:
     aliases: [clearcache, cc]
     help: Clear all cached data.
+  install:
+    help: Install local configuration files.
 translate:
   ids:
     - Completed successfully.
