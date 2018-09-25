@@ -49,6 +49,7 @@ commands:
     help: Clear all cached data.
   install:
     help: Install local configuration files.translate:
+translate:
   ids:
     - Completed successfully.
     - Failed.
