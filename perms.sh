@@ -30,8 +30,6 @@ case $command in
 
     "install")
         install_source="$ROOT/install"
-
-        # Copy over user files.
         list_clear
         for file in $(ls $install_source); do
             destination="$WDIR/$file"
@@ -40,7 +38,6 @@ case $command in
             fi
         done
         has_failed && exit_with_failure
-
         echo_green_list
         exit_with_success "$title is installed."
     ;;
