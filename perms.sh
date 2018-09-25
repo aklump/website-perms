@@ -41,17 +41,16 @@ implement_cloudy_basic
 
 # Import configuration as variables.
 eval $(get_config_path_as "project" "path_to.project")
-exit_with_failure_if_empty_config "path_to.project"
-[ -e $project ] || exit_with_failure "path_to.project does not exist."
+exit_with_failure_if_config_is_not_path "path_to.project"
 
 eval $(get_config_path_as "web_root" "path_to.web_root")
-exit_with_failure_if_empty_config "path_to.web_root"
-[ -e $web_root ] || exit_with_failure "path_toweb_root does not exist."
+exit_with_failure_if_config_is_not_path "path_to.web_root"
 
 eval $(get_config_path_as "custom_modules" "path_to.custom_modules")
-[ -e $path_to_custom_modules ] || exit_with_failure "path_to.custom_modules does not exist"
+exit_with_failure_if_config_is_not_path "path_to.custom_modules"
+
 eval $(get_config_path "path_to.private")
-[ -e $path_to_private ] || exit_with_failure "path_to.private does not exist"
+exit_with_failure_if_config_is_not_path "path_to.private"
 
 eval $(get_config -a "perms")
 exit_with_failure_if_empty_config "perms.user"
@@ -75,6 +74,7 @@ if [ -d "$web_root/sites/" ]; then
         [ -d "$i" ] && writable_paths=("${writable_paths[@]}" "$i")
     done
 fi
+
 for i in $(ls "$path_to_private/"); do
     i="$path_to_private/$i/files"
     [ -d "$i" ] && writable_paths=("${writable_paths[@]}" "$i")
