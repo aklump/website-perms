@@ -30,7 +30,7 @@ path_to:
 
 title: "Permissions"
 additional_config:
-  - _perms.local.yml
+  - ../../bin/_perms.local.yml
 default_command: info
 commands:
   info:
