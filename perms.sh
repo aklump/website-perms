@@ -146,7 +146,7 @@ case $command in
         install_source="$ROOT/install"
         list_clear
         for file in $(ls $install_source); do
-            destination="$WDIR/$file"
+            destination="$WDIR/bin/$file"
             if ! [ -e "$destination" ]; then
                 cp "$install_source/$file" "$destination" && list_add_item "$file created" || fail_because "Could not copy $file"
             fi
