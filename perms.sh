@@ -19,6 +19,21 @@ s="${BASH_SOURCE[0]}";while [ -h "$s" ];do dir="$(cd -P "$(dirname "$s")" && pwd
 
 # Input validation.
 validate_input || exit_with_failure "Something didn't work..."
+command=$(get_command)
+
+if [[ "$command" == "install" ]]; then
+    install_source="$ROOT/install"
+    list_clear
+    for file in $(ls $install_source); do
+        destination="$WDIR/bin/$file"
+        if ! [ -e "$destination" ]; then
+            cp "$install_source/$file" "$destination" && list_add_item "$file created" || fail_because "Could not copy $file"
+        fi
+    done
+    has_failed && exit_with_failure
+    echo_green_list
+    exit_with_success "$(get_title) is installed."
+fi
 
 implement_cloudy_basic
 
@@ -99,7 +114,6 @@ for i in $(find "$web_root" -name '.htpasswd' -type f); do
 done
 
 # Handle other commands.
-command=$(get_command)
 case $command in
     info)
         echo_title "Configuration Info"
@@ -140,20 +154,6 @@ case $command in
         echo_table
 
         exit_with_success "Config OK"
-    ;;
-
-    "install")
-        install_source="$ROOT/install"
-        list_clear
-        for file in $(ls $install_source); do
-            destination="$WDIR/bin/$file"
-            if ! [ -e "$destination" ]; then
-                cp "$install_source/$file" "$destination" && list_add_item "$file created" || fail_because "Could not copy $file"
-            fi
-        done
-        has_failed && exit_with_failure
-        echo_green_list
-        exit_with_success "$(get_title) is installed."
     ;;
 
     "apply")
