@@ -1,17 +1,58 @@
+# General permissions; look to _perms.local.yml for user and group.
+perms:
+  files: 640
+  dirs: 750
+  readonly: go-w
+  writable: ug+w
+  executable: ug+x
+
+# A list of files or folders to apply readonly permissions to.
+readonly_paths:
+  - ../web/sites/default
+  - ../web/sites/default/settings*.php
+
+# A list of files or folders to apply writable permissions to.
+#writable_paths:
+
+# A list of files or folders to apply executable permissions to.
+executable_paths:
+  - newmail.php
+  - perms.sh
+  - install.sh
+  - composer_install_php56.sh
+
+# Path definitions
+path_to:
+  project: ..
+  web_root: ../web
+  private: ../private
+  custom_modules: ../web/modules/custom
+
 title: "Permissions"
 additional_config:
-default_command: help
+  - _perms.local.yml
+default_command: info
 commands:
+  info:
+    help: Show configuration info
   help:
     help: Show this help screen.
+  apply:
+    help: Apply permissions to the defined environment.
+    options:
+      verbose:
+        help: Show more verbose output.
+        type: boolean
+        aliases: [v]
   clear-cache:
     aliases: [clearcache, cc]
     help: Clear all cached data.
   install:
-    help: Install local configuration files.
-translate:
+    help: Install local configuration files.translate:
   ids:
     - Completed successfully.
     - Failed.
   strings:
     en:
+      - All permissions set.
+      - Failed setting permissions.
