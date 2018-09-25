@@ -12,6 +12,22 @@ CONFIG="perms.yml";
 #LOGFILE="perms.log"
 
 # TODO: Event handlers and other functions go here or source another file.
+function on_pre_config() {
+
+    if [[ "$(get_command)" == "install" ]]; then
+        install_source="$ROOT/install"
+        list_clear
+        for file in $(ls $install_source); do
+            destination="$WDIR/bin/$file"
+            if ! [ -e "$destination" ]; then
+                cp "$install_source/$file" "$destination" && list_add_item "$file created" || fail_because "Could not copy $file"
+            fi
+        done
+        has_failed && exit_with_failure
+        echo_green_list
+        exit_with_success "$(get_title) is installed."
+    fi
+}
 
 # Begin Cloudy Bootstrap
 s="${BASH_SOURCE[0]}";while [ -h "$s" ];do dir="$(cd -P "$(dirname "$s")" && pwd)";s="$(readlink "$s")";[[ $s != /* ]] && s="$dir/$s";done;r="$(cd -P "$(dirname "$s")" && pwd)";source "$r/../cloudy/cloudy.sh"
@@ -20,20 +36,6 @@ s="${BASH_SOURCE[0]}";while [ -h "$s" ];do dir="$(cd -P "$(dirname "$s")" && pwd
 # Input validation.
 validate_input || exit_with_failure "Something didn't work..."
 command=$(get_command)
-
-if [[ "$command" == "install" ]]; then
-    install_source="$ROOT/install"
-    list_clear
-    for file in $(ls $install_source); do
-        destination="$WDIR/bin/$file"
-        if ! [ -e "$destination" ]; then
-            cp "$install_source/$file" "$destination" && list_add_item "$file created" || fail_because "Could not copy $file"
-        fi
-    done
-    has_failed && exit_with_failure
-    echo_green_list
-    exit_with_success "$(get_title) is installed."
-fi
 
 implement_cloudy_basic
 
