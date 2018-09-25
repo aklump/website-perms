@@ -22,28 +22,27 @@ validate_input || exit_with_failure "Something didn't work..."
 
 implement_cloudy_basic
 
+eval $(get_config title)
+
 # Handle other commands.
 command=$(get_command)
 case $command in
 
     "install")
         install_source="$ROOT/install"
-        bin_dir=$(realpath "$ROOT/../..")
-
-        # Create symlink in bin/perms
-        [ -s "$bin_dir/perms" ] || ln -s "$install_source/perms.sh" "$bin_dir/perms" || fail_because "Could not create symlink $bin_dir/perms"
 
         # Copy over user files.
         list_clear
-        for file in "$(ls $install_source)"; do
-            if [ ! -e $bin_dir/$file ]; then
-                cp $install_source/$file $bin_dir/$file && list_add "$file created" || fail_because "Could not copy $file"
+        for file in $(ls $install_source); do
+            destination="$WDIR/$file"
+            if ! [ -e "$destination" ]; then
+                cp "$install_source/$file" "$destination" && list_add_item "$file created" || fail_because "Could not copy $file"
             fi
         done
-        echo_green_list
-
         has_failed && exit_with_failure
-        exit_with_success
+
+        echo_green_list
+        exit_with_success "$title is installed."
     ;;
 
 esac
