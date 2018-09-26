@@ -1,6 +1,6 @@
 ## Requirements
 
-You must have [Cloudy](https://github.com/aklump/cloudy) installed on your system.
+You must have [Cloudy](https://github.com/aklump/cloudy) installed on your system to install this package.
 
 ## Installation
 
@@ -16,12 +16,13 @@ Install per the following structure where `.` is a directory above web root and 
         ├── cloudy
         └── website-perms
 
-Use the following one-liner to install this script.  It should be called from the top directory of the tree above, a.k.a `.`
+- Use the following one-liner to install this script.  It should be called from the top directory of the tree above, a.k.a `.`
     
-    (d="$PWD" && (test -d opt || mkdir opt) && (test -d bin || mkdir bin) && cd opt && cloudy core > /dev/null && (test -d website-perms || git clone https://github.com/aklump/website-perms.git) && (test -s $d/bin/perms || ln -s $d/opt/website-perms/perms.sh $d/bin/perms)) && ./bin/perms install
+        (d="$PWD" && (test -d opt || mkdir opt) && (test -d bin || mkdir bin) && cd opt && cloudy core > /dev/null && (test -d website-perms || git clone https://github.com/aklump/website-perms.git) && (test -s $d/bin/perms || ln -s $d/opt/website-perms/perms.sh $d/bin/perms)) && ./bin/perms install
 
 - Open _bin/\_perms.local.yml_ and update the `user` and `group` values.
 - Open _bin/\_perms.yml_ and modify as needed.
+- In your CLI enter `./bin/perms` to get an overview.
 
 ## Configuration Files
 
@@ -33,7 +34,7 @@ Use the following one-liner to install this script.  It should be called from th
 
 ## Custom Configuration
 
-* You may add any additional keys to `path_to`, which point to paths you may wish to use in _perms.custom.sh_, they will automatically be made available as variables.  They will also be validated as real paths.
+* You may add any additional keys to `path_to`, which point to paths you may wish to use in _perms.custom.sh_, they will automatically be made available as variables.  For example `$path_to_some_path_of_yours` holds the config value and is available in _\_perms.custom.sh_.  They will also be validated to make sure they are paths that exist.
 
 
 ## Usage
