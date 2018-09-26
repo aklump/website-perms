@@ -30,8 +30,9 @@ The installation script above will generate the following structure where `.` is
     ├── bin
     │   ├── perms -> ../opt/website-perms/perms.sh
     │   ├── _perms.custom.sh
-    │   ├── _perms.yml
-    │   └── _perms.local.yml
+    │   └── config
+    │       ├── _perms.yml
+    │       └── _perms.local.yml
     └── opt
         ├── cloudy
         └── website-perms
