@@ -166,6 +166,30 @@ case $command in
         # Executable permissions.
         #
 
+        # Readonly directories.
+        if [ ${#readonly_paths[@]} -gt 0 ]; then
+            exit_with_failure_if_empty_config "perms.readonly"
+            echo_heading "Make explicit paths read-only"
+            echo_list__array=()
+            for path in "${readonly_paths[@]}"; do
+              chmod -R $perms_readonly $path
+              echo_list__array=("${echo_list__array[@]}" "$path")
+            done
+            has_option "v" && echo_green_list
+        fi
+
+        # Writable directories.
+        if [ ${#writable_paths[@]} -gt 0 ]; then
+            exit_with_failure_if_empty_config "perms.writable"
+            echo_heading "Make explicit paths writable"
+            echo_list__array=()
+            for path in "${writable_paths[@]}"; do
+              chmod -R $perms_writable $path
+              echo_list__array=("${echo_list__array[@]}" "$path")
+            done
+            has_option "v" && echo_green_list
+        fi
+
         # Give execute permissions as configured.
         if [ ${#executable_paths[@]} -gt 0 ]; then
             exit_with_failure_if_empty_config "perms.executable"
@@ -178,32 +202,8 @@ case $command in
             has_option "v" && echo_green_list
         fi
 
-        # Readonly directories.
-        if [ ${#readonly_paths[@]} -gt 0 ]; then
-            exit_with_failure_if_empty_config "perms.readonly"
-            echo_heading "Make explicit directories read-only"
-            echo_list__array=()
-            for path in "${readonly_paths[@]}"; do
-              chmod -R $perms_readonly $path
-              echo_list__array=("${echo_list__array[@]}" "$path")
-            done
-            has_option "v" && echo_green_list
-        fi
-
-        # Writable directories.
-        if [ ${#writable_paths[@]} -gt 0 ]; then
-            exit_with_failure_if_empty_config "perms.writable"
-            echo_heading "Make explicit directories writable"
-            echo_list__array=()
-            for path in "${writable_paths[@]}"; do
-              chmod -R $perms_writable $path
-              echo_list__array=("${echo_list__array[@]}" "$path")
-            done
-            has_option "v" && echo_green_list
-        fi
-
         # Hide all /docs/public_html folders by adding an .htaccess with deny from all.
-        echo_heading "Add deny from all for documentation directories"
+        echo_heading "Add \"deny from all\" for documentation directories"
         documentation_dirs=($(find "${path_to_web_root}" -depth -wholename "*docs/public_html"))
         documentation_dirs=("${documentation_dirs[@]}" "${path_to_project}/docs")
         if [ ${#documentation_dirs[@]} -gt 0 ]; then
@@ -222,7 +222,6 @@ case $command in
         # Add any custom to the project extensions as _perms.custom.sh
         #
         test -f "$ROOT/_perms.custom.sh" && echo_heading "Apply custom permissions" && source "$ROOT/_perms.custom.sh"
-
 
         has_failed && exit_with_failure
         exit_with_success
