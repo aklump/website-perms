@@ -2,7 +2,7 @@
 path_to:
   project: ../..
   web_root: ../../web
-Re  custom_modules: ../../web/modules/custom
+  custom_modules: ../../web/modules/custom
 
 # General permissions; look to _perms.local.yml for user and group.
 perms:
