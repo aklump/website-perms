@@ -4,7 +4,7 @@
 
 ## Summary
 
-This script helps manage website permissions by giving you a clean configuration file for what paths should have Read, Write, and Execute permissions, as well as who the user and group should be.  It facilitates different perms by environment: prod, staging, dev.  And automatically handles Drupal permissions.
+This script helps manage website permissions by giving you a clean YAML configuration file in which you define what paths should have READ, WRITE, and EXECUTE permissions, as well as who the user and group should be.  It facilitates different perms by environment: prod, staging, dev.  And automatically handles common Drupal path permissions.
 
 **Visit <https://aklump.github.io/website-perms> for full documentation.**
 
