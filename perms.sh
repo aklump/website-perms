@@ -41,13 +41,13 @@ implement_cloudy_basic
 
 # Import configuration as variables.
 eval $(get_config_path_as "project" "path_to.project")
-exit_with_failure_if_config_is_not_path "path_to.project"
+exit_with_failure_if_config_is_not_path "path_to.project" --as=project
 
 eval $(get_config_path_as "web_root" "path_to.web_root")
-exit_with_failure_if_config_is_not_path "path_to.web_root"
+exit_with_failure_if_config_is_not_path "path_to.web_root" --as=web_root
 
 eval $(get_config_path_as "custom_modules" "path_to.custom_modules")
-exit_with_failure_if_config_is_not_path "path_to.custom_modules"
+exit_with_failure_if_config_is_not_path "path_to.custom_modules" --as=custom_modules
 
 eval $(get_config_path "path_to.private")
 exit_with_failure_if_config_is_not_path "path_to.private"
