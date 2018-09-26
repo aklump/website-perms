@@ -49,6 +49,8 @@ eval $(get_config_keys_as "path_to_keys" "path_to")
 for key in "${path_to_keys[@]}"; do
     exit_with_failure_if_config_is_not_path "path_to.$key"
 done
+exit_with_failure_if_empty_config "path_to.web_root"
+exit_with_failure_if_empty_config "path_to.private"
 
 eval $(get_config -a "perms.readonly" "go-w")
 eval $(get_config -a "perms.writable" "ug+w")
@@ -148,7 +150,6 @@ done
 case $command in
     info)
         echo_title "Configuration Info"
-
         echo_heading "Ownership and Permission Settings"
         table_add_row "user" "$perms_user"
         table_add_row "group" "$perms_group"
@@ -196,8 +197,7 @@ case $command in
         exit_with_success "Config OK"
     ;;
 
-    "apply")
-
+    apply)
         echo_heading "Apply ownership and file permissions to project"
         find "${path_to_project}" -exec chown $perms_chown {} + || fail_because "Could not chown files and directories."
         find "${path_to_project}" -type d -exec chmod $perms_dirs {} + || fail_because "Could not set default perms on directories."
