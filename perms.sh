@@ -51,10 +51,16 @@ exit_with_failure_if_config_is_not_path "path_to.private"
 eval $(get_config_path "path_to.custom_modules")
 exit_with_failure_if_config_is_not_path "path_to.custom_modules"
 
+eval $(get_config -a "perms.readonly" "go-w")
+eval $(get_config -a "perms.writable" "ug+w")
+eval $(get_config -a "perms.executable" "ug+x")
 eval $(get_config -a "perms")
 exit_with_failure_if_empty_config "perms.user"
 exit_with_failure_if_empty_config "perms.dirs"
 exit_with_failure_if_empty_config "perms.files"
+exit_with_failure_if_empty_config "perms.readonly"
+exit_with_failure_if_empty_config "perms.writable"
+exit_with_failure_if_empty_config "perms.executable"
 
 # Figure out user/group ownership.
 perms_chown=${perms_user}

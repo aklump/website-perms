@@ -28,6 +28,11 @@ Use the following one-liner to install this script.  It should be called from th
 | _\_perms.local.yml_ | Configuration overrides for a single environment; not version controlled. | no |
 | _\_perms.custom.sh_ | Optional.  A custom Bash script to be sourced during the `apply` command.  Use it for anything custom that is not handled by configuration values.  Think of this as an apply hook. | yes |
 
+## Custom Configuration
+
+* You may add any additional keys to `path_to`, which point to paths you may wish to use in _perms.custom.sh_, they will automatically be made available as variables.  They will also be validated as real paths.
+
+
 ## Usage
 
 To apply permissions: `./bin/perms apply`
