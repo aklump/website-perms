@@ -2,6 +2,7 @@
 path_to:
   project: ../..
   web_root: ../../web
+  private: ../../private
   custom_modules: ../../web/modules/custom
 
 # General permissions; look to _perms.local.yml for user and group.
@@ -14,13 +15,9 @@ perms:
 
 # A list of files or folders to apply readonly permissions to.
 readonly_paths:
-  - ../../web/sites/*
-  - ../../web/sites/*/settings*.php
 
 # A list of files or folders to apply writable permissions to.
 writable_paths:
-  - ../../private/*/files
-  - ../../web/sites/*/files
 
 # A list of files or folders to apply executable permissions to.
 executable_paths:

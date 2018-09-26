@@ -45,6 +45,9 @@ exit_with_failure_if_config_is_not_path "path_to.project"
 eval $(get_config_path "path_to.web_root")
 exit_with_failure_if_config_is_not_path "path_to.web_root"
 
+eval $(get_config_path "path_to.private")
+exit_with_failure_if_config_is_not_path "path_to.private"
+
 eval $(get_config_path "path_to.custom_modules")
 exit_with_failure_if_config_is_not_path "path_to.custom_modules"
 
@@ -63,9 +66,24 @@ fi
 # Calculate writable paths.
 #
 eval $(get_config_path -a "writable_paths")
+# Add to the writable paths by logic.
+
+# Drupal public files.
+if [ -d "${path_to_web_root}/sites/" ]; then
+    for i in $(ls "${path_to_web_root}/sites/"); do
+        i="${path_to_web_root}/sites/$i/files"
+        [ -d "$i" ] && writable_paths=("${writable_paths[@]}" "$i")
+    done
+fi
+
+# Drupal private files.
+for i in $(ls "$path_to_private/"); do
+    i="$path_to_private/$i/files"
+    [ -d "$i" ] && writable_paths=("${writable_paths[@]}" "$i")
+done
 
 #
-# Calculate executable paths.
+# Calculate executable paths
 #
 eval $(get_config_path -a "executable_paths")
 # This handles Node executables.
@@ -94,9 +112,23 @@ for path in "${loft_docs_dirs[@]}"; do
 done
 
 #
-# Calcualte read only paths.
+# Calculate read only paths.
 #
 eval $(get_config_path -a "readonly_paths")
+
+# Drupal settings.
+if [ -d "${path_to_web_root}/sites/" ]; then
+    for i in $(ls "${path_to_web_root}/sites/"); do
+        i="${path_to_web_root}/sites/$i/"
+        if [ -d "$i" ]; then
+            readonly_paths=("${readonly_paths[@]}" "$i")
+            for j in $(ls "$i"settings*.php); do
+                readonly_paths=("${readonly_paths[@]}" "$j")
+            done
+        fi
+    done
+fi
+
 # Add to the readonly paths by logic.
 for i in $(find "${path_to_web_root}" -name '.htaccess' -type f); do
    readonly_paths=("${readonly_paths[@]}" "$i")
@@ -104,7 +136,8 @@ done
 for i in $(find "${path_to_web_root}" -name '.htpasswd' -type f); do
    readonly_paths=("${readonly_paths[@]}" "$i")
 done
-# Drupal settings are handled by configuration.
+
+
 
 # Handle other commands.
 case $command in
