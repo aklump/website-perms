@@ -31,8 +31,8 @@ The installation script above will generate the following structure where `.` is
     │   ├── perms -> ../opt/perms/perms.sh
     │   ├── _perms.custom.sh
     │   └── config
-    │       ├── _perms.yml
-    │       └── _perms.local.yml
+    │       ├── perms.yml
+    │       └── perms.local.yml
     └── opt
         ├── cloudy
         └── perms
@@ -48,8 +48,8 @@ The installation script above will generate the following structure where `.` is
 
 | Filename | Description | VCS |
 |----------|----------|---|
-| _\_perms.yml_ | Configuration shared across all server environments: prod, staging, dev  | yes |
-| _\_perms.local.yml_ | Configuration overrides for a single environment; not version controlled. | no |
+| _perms.yml_ | Configuration shared across all server environments: prod, staging, dev  | yes |
+| _perms.local.yml_ | Configuration overrides for a single environment; not version controlled. | no |
 | _\_perms.custom.sh_ | Optional.  A custom Bash script to be sourced during the `apply` command.  Use it for anything custom that is not handled by configuration values.  Think of this as an apply hook. | yes |
 
 ### Custom Configuration
