@@ -49,6 +49,7 @@ eval $(get_config_keys_as "path_to_keys" "path_to")
 for key in "${path_to_keys[@]}"; do
     exit_with_failure_if_config_is_not_path "path_to.$key"
 done
+exit_with_failure_if_empty_config "path_to.project"
 exit_with_failure_if_empty_config "path_to.web_root"
 exit_with_failure_if_empty_config "path_to.private"
 
@@ -99,7 +100,8 @@ for i in $(find "${path_to_web_root}" -wholename "*node_modules/.bin/*"); do
 done
 
 # This will handle all of the loft_docs command files.
-declare -a loft_docs_dirs=("${path_to_project}" "${path_to_custom_modules}");
+declare -a loft_docs_dirs=("${path_to_project}");
+[[ "${path_to_custom_modules}" ]] && loft_docs_dirs=("${loft_docs_dirs[@]}" "${path_to_custom_modules}")
 for path in "${loft_docs_dirs[@]}"; do
     for i in $(find "$path" -wholename "*/core/update.sh"); do
         executable_paths=("${executable_paths[@]}" $i)
