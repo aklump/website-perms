@@ -1,3 +1,8 @@
+# Add this file to source control.  See also _perms.local.yml.
+# For all path configurations, you may use absolute or relative paths.
+# Relative paths are relative to perms.sh.  You may use globbing in your
+# filenames, e.g. settings*.php
+
 # Path definitions
 path_to:
 
@@ -7,7 +12,8 @@ path_to:
   # Where is the web root?
   web_root: ../../web
 
-  # Where is your (Drupal) private directory?
+  # Where is your private directory?  For Drupal sites that use something like
+  # ../../private/default/files you would enter ../../private.
   private: ../../private
 
   # Where are your (Drupal) custom modules?
@@ -20,10 +26,6 @@ perms:
   readonly: go-w
   writable: ug+w
   executable: ug+x
-
-# For all path configurations below, you may use absolute or relative paths.
-# Relative paths are relative to perms.sh.  You may use globbing in your
-# filenames, e.g. settings*.php
 
 # An array of filepaths to receive perms.readonly
 readonly_paths:

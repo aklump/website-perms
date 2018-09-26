@@ -1,3 +1,6 @@
+# This file should not be added to source control.  It is meant to use for
+# environment-specific overrides of _perms.yml
+
 perms:
   user: user
   group: group
