@@ -15,15 +15,15 @@ perms:
 
 # A list of files or folders to apply readonly permissions to.
 readonly_paths:
-  - ../../web/sites/default
-  - ../../web/sites/default/settings*.php
+  - ../../web/sites/*
+  - ../../web/sites/*/settings*.php
 
 # A list of files or folders to apply writable permissions to.
-#writable_paths:
+writable_paths:
+  - ../../private/*/files
+  - ../../web/sites/*/files
 
 # A list of files or folders to apply executable permissions to.
 executable_paths:
-  - newmail.php
   - perms.sh
   - install.sh
-  - composer_install_php56.sh

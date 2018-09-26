@@ -63,24 +63,12 @@ if [[ "$perms_group" ]]; then
 fi
 
 #
-# Writable
+# Calculate writable paths.
 #
 eval $(get_config_path -a "writable_paths")
-# Add to the writable paths by logic.
-if [ -d "${path_to_web_root}/sites/" ]; then
-    for i in $(ls "${path_to_web_root}/sites/"); do
-        i="${path_to_web_root}/sites/$i/files"
-        [ -d "$i" ] && writable_paths=("${writable_paths[@]}" "$i")
-    done
-fi
-
-for i in $(ls "$path_to_private/"); do
-    i="$path_to_private/$i/files"
-    [ -d "$i" ] && writable_paths=("${writable_paths[@]}" "$i")
-done
 
 #
-# Executable
+# Calculate executable paths.
 #
 eval $(get_config_path -a "executable_paths")
 # This handles Node executables.
@@ -109,7 +97,7 @@ for path in "${loft_docs_dirs[@]}"; do
 done
 
 #
-# Read Only
+# Calcualte read only paths.
 #
 eval $(get_config_path -a "readonly_paths")
 # Add to the readonly paths by logic.
@@ -119,6 +107,7 @@ done
 for i in $(find "${path_to_web_root}" -name '.htpasswd' -type f); do
    readonly_paths=("${readonly_paths[@]}" "$i")
 done
+# Drupal settings are handled by configuration.
 
 # Handle other commands.
 case $command in
@@ -180,10 +169,6 @@ case $command in
         #
         # Executable permissions.
         #
-
-        # Remove execute access to all .sh files.
-        echo_heading "Remove execute perms from *.sh"
-        find "${path_to_project}" -type f -name "*.sh" -exec chmod ugo-x {} + || fail_because "Could not remove execute permissions from *.sh"
 
         # Give execute permissions as configured.
         if [ ${#executable_paths[@]} -gt 0 ]; then
