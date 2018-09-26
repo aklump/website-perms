@@ -25,4 +25,4 @@ writable_paths:
 # A list of files or folders to apply executable permissions to.
 executable_paths:
   - perms.sh
-  - install.sh
+  - ../../bin/install.sh
