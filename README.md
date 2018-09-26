@@ -20,6 +20,9 @@ Use the following one-liner to install this script.  It should be called from th
     
     (d="$PWD" && (test -d opt || mkdir opt) && (test -d bin || mkdir bin) && cd opt && cloudy core > /dev/null && (test -d website-perms || git clone https://github.com/aklump/website-perms.git) && (test -s $d/bin/perms || ln -s $d/opt/website-perms/perms.sh $d/bin/perms)) && ./bin/perms install
 
+- Open _bin/\_perms.local.yml_ and update the `user` and `group` values.
+- Open _bin/\_perms.yml_ and modify as needed.
+
 ## Configuration Files
 
 | Filename | Description | VCS |

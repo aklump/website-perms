@@ -1,4 +1,4 @@
 perms:
-  user: aklump
-  group: staff
+  user: user
+  group: group
 
