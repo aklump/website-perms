@@ -159,7 +159,8 @@ case $command in
 
         echo_heading "Read Only Paths Relative to ${path_to_project}"
         for i in "${readonly_paths[@]}"; do
-            row="${i/${path_to_project}/ }"
+            row="${i/$path_to_project/}"
+            row=${row#/}
             [ ! -e $i ] && row="$(echo_red $row)" && fail_because "$(basename $i) not found."
             table_add_row "$row"
         done
@@ -167,7 +168,8 @@ case $command in
 
         echo_heading "Writable Paths Relative to ${path_to_project}"
         for i in "${writable_paths[@]}"; do
-            row="${i/${path_to_project}/ }"
+            row="${i/$path_to_project/}"
+            row=${row#/}
             [ ! -e $i ] && row="$(echo_red $row)" && fail_because "$(basename $i) not found."
             table_add_row "$row"
         done
@@ -175,7 +177,8 @@ case $command in
 
         echo_heading "Executable Paths Relative to ${path_to_project}"
         for i in "${executable_paths[@]}"; do
-            row="${i/${path_to_project}/ }"
+            row="${i/$path_to_project/}"
+            row=${row#/}
             [ ! -e $i ] && row="$(echo_red $row)" && fail_because "$(basename $i) not found."
             table_add_row "$row"
         done
