@@ -67,9 +67,9 @@ fi
 #
 eval $(get_config_path -a "writable_paths")
 # Add to the writable paths by logic.
-if [ -d "$web_root/sites/" ]; then
-    for i in $(ls "$web_root/sites/"); do
-        i="$web_root/sites/$i/files"
+if [ -d "${path_to_web_root}/sites/" ]; then
+    for i in $(ls "${path_to_web_root}/sites/"); do
+        i="${path_to_web_root}/sites/$i/files"
         [ -d "$i" ] && writable_paths=("${writable_paths[@]}" "$i")
     done
 fi
@@ -84,12 +84,12 @@ done
 #
 eval $(get_config_path -a "executable_paths")
 # This handles Node executables.
-for i in $(find "$web_root" -wholename "*node_modules/.bin/*"); do
+for i in $(find "${path_to_web_root}" -wholename "*node_modules/.bin/*"); do
     executable_paths=("${executable_paths[@]}" "$i")
 done
 
 # This will handle all of the loft_docs command files.
-declare -a loft_docs_dirs=("$path_to_project" "$custom_modules");
+declare -a loft_docs_dirs=("${path_to_project}" "${path_to_custom_modules}");
 for path in "${loft_docs_dirs[@]}"; do
     for i in $(find "$path" -wholename "*/core/update.sh"); do
         executable_paths=("${executable_paths[@]}" $i)
@@ -113,10 +113,10 @@ done
 #
 eval $(get_config_path -a "readonly_paths")
 # Add to the readonly paths by logic.
-for i in $(find "$web_root" -name '.htaccess' -type f); do
+for i in $(find "${path_to_web_root}" -name '.htaccess' -type f); do
    readonly_paths=("${readonly_paths[@]}" "$i")
 done
-for i in $(find "$web_root" -name '.htpasswd' -type f); do
+for i in $(find "${path_to_web_root}" -name '.htpasswd' -type f); do
    readonly_paths=("${readonly_paths[@]}" "$i")
 done
 
@@ -135,32 +135,32 @@ case $command in
         table_add_row "executable" "$perms_executable"
         echo_table && echo
 
-        echo_heading "Read Only Paths Relative to $path_to_project"
+        echo_heading "Read Only Paths Relative to ${path_to_project}"
         for i in "${readonly_paths[@]}"; do
-            row="${i/$path_to_project/ }"
+            row="${i/${path_to_project}/ }"
             [ ! -e $i ] && row="$(echo_red $row)" && fail_because "$(basename $i) not found."
             table_add_row "$row"
         done
         echo_table && echo
 
-        echo_heading "Writable Paths Relative to $path_to_project"
+        echo_heading "Writable Paths Relative to ${path_to_project}"
         for i in "${writable_paths[@]}"; do
-            row="${i/$path_to_project/ }"
+            row="${i/${path_to_project}/ }"
             [ ! -e $i ] && row="$(echo_red $row)" && fail_because "$(basename $i) not found."
             table_add_row "$row"
         done
         echo_table && echo
 
-        echo_heading "Executable Paths Relative to $path_to_project"
+        echo_heading "Executable Paths Relative to ${path_to_project}"
         for i in "${executable_paths[@]}"; do
-            row="${i/$path_to_project/ }"
+            row="${i/${path_to_project}/ }"
             [ ! -e $i ] && row="$(echo_red $row)" && fail_because "$(basename $i) not found."
             table_add_row "$row"
         done
         echo_table && echo
 
         echo_heading "Paths"
-        table_add_row "project" "$path_to_project"
+        table_add_row "project" "${path_to_project}"
         table_add_row "web_root" "${path_to_web_root}"
         table_add_row "private" "${path_to_private}"
         table_add_row "custom_modules" "${path_to_custom_modules}"
@@ -173,9 +173,9 @@ case $command in
     "apply")
 
         echo_heading "Apply ownership and file permissions to project"
-        find "$path_to_project" -exec chown $perms_chown {} + || fail_because "Could not chown files and directories."
-        find "$path_to_project" -type d -exec chmod $perms_dirs {} + || fail_because "Could not set default perms on directories."
-        find "$path_to_project" -type f -exec chmod $perms_files {} + || fail_because "Could set default perms on files."
+        find "${path_to_project}" -exec chown $perms_chown {} + || fail_because "Could not chown files and directories."
+        find "${path_to_project}" -type d -exec chmod $perms_dirs {} + || fail_because "Could not set default perms on directories."
+        find "${path_to_project}" -type f -exec chmod $perms_files {} + || fail_because "Could set default perms on files."
 
         #
         # Executable permissions.
@@ -183,7 +183,7 @@ case $command in
 
         # Remove execute access to all .sh files.
         echo_heading "Remove execute perms from *.sh"
-        find "$path_to_project" -type f -name "*.sh" -exec chmod ugo-x {} + || fail_because "Could not remove execute permissions from *.sh"
+        find "${path_to_project}" -type f -name "*.sh" -exec chmod ugo-x {} + || fail_because "Could not remove execute permissions from *.sh"
 
         # Give execute permissions as configured.
         if [ ${#executable_paths[@]} -gt 0 ]; then
@@ -223,8 +223,8 @@ case $command in
 
         # Hide all /docs/public_html folders by adding an .htaccess with deny from all.
         echo_heading "Add deny from all for documentation directories"
-        documentation_dirs=($(find "$web_root" -depth -wholename "*docs/public_html"))
-        documentation_dirs=("${documentation_dirs[@]}" "$path_to_project/docs")
+        documentation_dirs=($(find "${path_to_web_root}" -depth -wholename "*docs/public_html"))
+        documentation_dirs=("${documentation_dirs[@]}" "${path_to_project}/docs")
         if [ ${#documentation_dirs[@]} -gt 0 ]; then
             echo_list__array=()
             for dir in "${documentation_dirs[@]}"; do
