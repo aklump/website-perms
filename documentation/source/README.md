@@ -12,7 +12,7 @@ This script helps manage website permissions by giving you a clean YAML configur
 
 - Use the following one-liner to install this script.  It should be called from the top directory of the tree above, as indicated in the installation diagram by the `.`
     
-        (d="$PWD" && (test -d opt || mkdir opt) && (test -d bin || mkdir bin) && cd opt && cloudy core > /dev/null && (test -d website-perms || (git clone https://github.com/aklump/website-perms.git perms && rm -rf perms/.git)) && (test -s $d/bin/perms || ln -s $d/opt/perms/perms.sh $d/bin/perms)) && ./bin/perms install
+        (d="$PWD" && (test -d opt || mkdir opt) && (test -d bin || mkdir bin) && cd opt && cloudy core > /dev/null && (test -d perms || (git clone https://github.com/aklump/website-perms.git perms && rm -rf perms/.git)) && (test -s $d/bin/perms || ln -s $d/opt/perms/perms.sh $d/bin/perms)) && ./bin/perms install
 
 - Open _bin/\_perms.local.yml_ and update the `user` and `group` values.
 - Open _bin/\_perms.yml_ and modify as needed.
@@ -28,14 +28,14 @@ The installation script above will generate the following structure where `.` is
 
     .
     ├── bin
-    │   ├── perms -> ../opt/website-perms/perms.sh
+    │   ├── perms -> ../opt/perms/perms.sh
     │   ├── _perms.custom.sh
     │   └── config
     │       ├── _perms.yml
     │       └── _perms.local.yml
     └── opt
         ├── cloudy
-        └── website-perms
+        └── perms
 
     
 ### To Update
