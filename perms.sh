@@ -6,7 +6,7 @@
 #
 
 # Define the configuration file relative to this script.
-CONFIG="perms.yml";
+CONFIG="perms.core.yml";
 
 # Uncomment this line to enable file logging.
 #LOGFILE="perms.log"
@@ -21,6 +21,7 @@ function on_pre_config() {
             [[ "$file" == "_perms.custom.sh" ]] && destination="$WDIR/bin/$file"
             [[ "$file" == "gitignore" ]] && destination="$ROOT/.gitignore"
             if ! [ -e "$destination" ]; then
+                [ -d $(dirname "$destination") ] || mkdir -p $(dirname $destination)
                 cp "$install_source/$file" "$destination" && list_add_item "$file created" || fail_because "Could not copy $file"
             fi
         done
