@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>README</title>
+  <title>Website Permissions</title>
   <link href="search/tipuesearch.css" rel="stylesheet">
   <link href="style.css" rel="stylesheet">
 </head>
@@ -12,7 +12,7 @@
   <div class="pager">
   <a href="index.html" class="prev index">&laquo;Index</a>
   <a href="index.html" class="index">Index</a>
-  <a href="_README.html" class="next _README">Perms&raquo;</a>
+  <a href="_tasklist.html" class="next _tasklist">Tasklist&raquo;</a>
 </div>
 </header>
 
@@ -22,16 +22,38 @@
   </form>
 </div>
 
-  <h1>README</h1>
+  <h1>Website Permissions</h1>
   <div class="breadcrumb"><a href="index.html">Index</a></div>
 
-<section><h2>Requirements</h2>
+<section>
+
+<p><img src="images/screenshot.jpg" alt="perms" /></p>
+
+<h2>Summary</h2>
+
+<p>This script helps manage website permissions by giving you a clean configuration file for what paths should have Read, Write, and Execute permissions, as well as who the user and group should be.  It facilitates different perms by environment: prod, staging, dev.  And automatically handles Drupal permissions.</p>
+
+<p><strong>Visit <a href="https://aklump.github.io/website-perms">https://aklump.github.io/website-perms</a> for full documentation.</strong></p>
+
+<h2>Quick Start</h2>
+
+<ul>
+<li><p>Use the following one-liner to install this script.  It should be called from the top directory of the tree above, as indicated in the installation diagram by the <code>.</code></p>
+
+<pre><code>(d="$PWD" &amp;&amp; (test -d opt || mkdir opt) &amp;&amp; (test -d bin || mkdir bin) &amp;&amp; cd opt &amp;&amp; cloudy core &gt; /dev/null &amp;&amp; (test -d website-perms || (git clone https://github.com/aklump/website-perms.git perms &amp;&amp; rm -rf perms/.git)) &amp;&amp; (test -s $d/bin/perms || ln -s $d/opt/perms/perms.sh $d/bin/perms)) &amp;&amp; ./bin/perms install
+</code></pre></li>
+<li><p>Open <em>bin/&#95;perms.local.yml</em> and update the <code>user</code> and <code>group</code> values.</p></li>
+<li>Open <em>bin/&#95;perms.yml</em> and modify as needed.</li>
+<li>In your CLI enter <code>./bin/perms</code> to get an overview.</li>
+</ul>
+
+<h2>Requirements</h2>
 
 <p>You must have <a href="https://github.com/aklump/cloudy">Cloudy</a> installed on your system to install this package.</p>
 
 <h2>Installation</h2>
 
-<p>Install per the following structure where <code>.</code> is a directory above web root and inside your SCM repository.</p>
+<p>The installation script above will generate the following structure where <code>.</code> is a directory above web root and inside your SCM repository.</p>
 
 <pre><code>.
 ├── bin
@@ -44,14 +66,13 @@
     └── website-perms
 </code></pre>
 
-<ul>
-<li><p>Use the following one-liner to install this script.  It should be called from the top directory of the tree above, as indicated in the diagram by the <code>.</code></p>
+<h3>To Update</h3>
 
-<pre><code>(d="$PWD" &amp;&amp; (test -d opt || mkdir opt) &amp;&amp; (test -d bin || mkdir bin) &amp;&amp; cd opt &amp;&amp; cloudy core &gt; /dev/null &amp;&amp; (test -d website-perms || (git clone https://github.com/aklump/website-perms.git perms &amp;&amp; rm -rf perms/.git)) &amp;&amp; (test -s $d/bin/perms || ln -s $d/opt/perms/perms.sh $d/bin/perms)) &amp;&amp; ./bin/perms install
+<ul>
+<li><p>Use the following one-liner to update to the latest script version.  It should be called from the top directory of the tree above, as indicated in the diagram by the <code>.</code></p>
+
+<pre><code>(cd opt &amp;&amp; git clone https://github.com/aklump/website-perms.git .updating__perms &amp;&amp; rsync -a --delete --exclude=.git* .updating__perms/ perms/; rm -rf .updating__perms)
 </code></pre></li>
-<li><p>Open <em>bin/&#95;perms.local.yml</em> and update the <code>user</code> and <code>group</code> values.</p></li>
-<li>Open <em>bin/&#95;perms.yml</em> and modify as needed.</li>
-<li>In your CLI enter <code>./bin/perms</code> to get an overview.</li>
 </ul>
 
 <h2>Configuration Files</h2>
@@ -83,7 +104,7 @@
 </tbody>
 </table>
 
-<h2>Custom Configuration</h2>
+<h3>Custom Configuration</h3>
 
 <ul>
 <li>You may add any additional keys to <code>path_to</code>, which point to paths you may wish to use in <em>perms.custom.sh</em>, they will automatically be made available as variables.  For example <code>$path_to_some_path_of_yours</code> holds the config value and is available in <em>&#95;perms.custom.sh</em>.  They will also be validated to make sure they are paths that exist.</li>
@@ -97,14 +118,9 @@
 <li>To see all commands use <code>./bin/perms help</code></li>
 </ul>
 
-<h2>To Update</h2>
+<h2>Contributing</h2>
 
-<ul>
-<li><p>Use the following one-liner to update to the latest script version.  It should be called from the top directory of the tree above, as indicated in the diagram by the <code>.</code></p>
-
-<pre><code>(cd opt &amp;&amp; git clone https://github.com/aklump/website-perms.git .updating__perms &amp;&amp; rsync -a --delete --exclude=.git* .updating__perms/ perms/; rm -rf .updating__perms)
-</code></pre></li>
-</ul>
+<p>If you find this project useful... please consider <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&amp;hosted_button_id=4E5KZHDQCEUV8&amp;item_name=Gratitude%20for%20aklump%2Fwebsite-perms">making a donation</a>.</p>
 </section>
 
 <div class="search__results">
@@ -115,11 +131,11 @@
   <div class="pager">
   <a href="index.html" class="prev index">&laquo;Index</a>
   <a href="index.html" class="index">Index</a>
-  <a href="_README.html" class="next _README">Perms&raquo;</a>
+  <a href="_tasklist.html" class="next _tasklist">Tasklist&raquo;</a>
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Wed, 26 Sep 2018 10:30:28 -0700</p>
+    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Wed, 26 Sep 2018 11:18:16 -0700</p>
   </div>
 </footer>
 
