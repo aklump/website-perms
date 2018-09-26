@@ -138,19 +138,25 @@ case $command in
 
         echo_heading "Read Only Paths Relative to $project"
         for i in "${readonly_paths[@]}"; do
-            table_add_row "${i/$project/ }"
+            row="${i/$project/ }"
+            [ ! -e $i ] && row="$(echo_red $row)" && fail_because "$(basename $i) not found."
+            table_add_row "$row"
         done
         echo_table && echo
 
         echo_heading "Writable Paths Relative to $project"
         for i in "${writable_paths[@]}"; do
-            table_add_row "${i/$project/ }"
+            row="${i/$project/ }"
+            [ ! -e $i ] && row="$(echo_red $row)" && fail_because "$(basename $i) not found."
+            table_add_row "$row"
         done
         echo_table && echo
 
         echo_heading "Executable Paths Relative to $project"
         for i in "${executable_paths[@]}"; do
-            table_add_row "${i/$project/ }"
+            row="${i/$project/ }"
+            [ ! -e $i ] && row="$(echo_red $row)" && fail_because "$(basename $i) not found."
+            table_add_row "$row"
         done
         echo_table && echo
 
@@ -161,6 +167,7 @@ case $command in
         table_add_row "custom_modules" "${custom_modules}"
         echo_table
 
+        has_failed && exit_with_failure "Configuration errors exist."
         exit_with_success "Config OK"
     ;;
 
