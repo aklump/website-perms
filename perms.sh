@@ -33,23 +33,19 @@ s="${BASH_SOURCE[0]}";while [ -h "$s" ];do dir="$(cd -P "$(dirname "$s")" && pwd
 # End Cloudy Bootstrap
 
 # Input validation
-validate_input || exit_with_failure "Something didn't work..."
+validate_input || exit_with_failure "Input validation failed."
 command=$(get_command)
 
 implement_cloudy_basic
 
 # Import configuration as variables.
-eval $(get_config_path "path_to.project")
-exit_with_failure_if_config_is_not_path "path_to.project"
+eval $(get_config_path -a "path_to")
+eval $(get_config_keys_as "path_to_keys" "path_to")
 
-eval $(get_config_path "path_to.web_root")
-exit_with_failure_if_config_is_not_path "path_to.web_root"
-
-eval $(get_config_path "path_to.private")
-exit_with_failure_if_config_is_not_path "path_to.private"
-
-eval $(get_config_path "path_to.custom_modules")
-exit_with_failure_if_config_is_not_path "path_to.custom_modules"
+# Validate all path_to keys as actual paths.
+for key in "${path_to_keys[@]}"; do
+    exit_with_failure_if_config_is_not_path "path_to.$key"
+done
 
 eval $(get_config -a "perms.readonly" "go-w")
 eval $(get_config -a "perms.writable" "ug+w")
@@ -185,9 +181,8 @@ case $command in
         echo_table && echo
 
         echo_heading "Paths"
-        eval $(get_config_keys "path_to")
-        for path in "${path_to[@]}"; do
-            table_add_row "$path" "$(eval echo "\${path_to_$path}")"
+        for key in "${path_to_keys[@]}"; do
+            table_add_row "$key" "$(eval echo "\${path_to_$key}")"
         done
         echo_table
 
