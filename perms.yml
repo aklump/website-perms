@@ -24,6 +24,6 @@ translate:
   strings:
     en: ['All permissions set.', 'Failed setting permissions.']
 name: 'Website Permissions'
-description: 'A script to make file permission management super easy.'
+description: 'A script to make website file permission management super easy.'
 homepage: 'https://github.com/aklump/website-perms'
 author: 'Aaron Klump <sourcecode@intheloftstudios.com>'
