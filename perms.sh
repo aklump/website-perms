@@ -17,7 +17,8 @@ function on_pre_config() {
         install_source="$ROOT/install"
         list_clear
         for file in $(ls $install_source); do
-            destination="$WDIR/bin/$file"
+            destination="$WDIR/bin/config/$file"
+            [[ "$file" == "_perms.custom.sh" ]] && destination="$WDIR/bin/$file"
             [[ "$file" == "gitignore" ]] && destination="$ROOT/.gitignore"
             if ! [ -e "$destination" ]; then
                 cp "$install_source/$file" "$destination" && list_add_item "$file created" || fail_because "Could not copy $file"

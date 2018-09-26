@@ -1,7 +1,7 @@
 title: Permissions
 additional_config:
-  - ../../bin/_perms.yml
-  - ../../bin/_perms.local.yml
+  - ../../bin/config/_perms.yml
+  - ../../bin/config/_perms.local.yml
 default_command: info
 version: '1.0'
 commands:
@@ -16,7 +16,7 @@ commands:
     aliases: [clearcache, cc]
     help: 'Clear all cached data.'
   install:
-    help: 'Install local configuration files.translate:'
+    help: 'Install local configuration files.'
 translate:
   ids:
     - 'Completed successfully.'
