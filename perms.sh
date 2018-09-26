@@ -48,9 +48,6 @@ exit_with_failure_if_config_is_not_path "path_to.web_root"
 eval $(get_config_path "path_to.custom_modules")
 exit_with_failure_if_config_is_not_path "path_to.custom_modules"
 
-eval $(get_config_path "path_to.private")
-exit_with_failure_if_config_is_not_path "path_to.private"
-
 eval $(get_config -a "perms")
 exit_with_failure_if_empty_config "perms.user"
 exit_with_failure_if_empty_config "perms.dirs"
@@ -151,7 +148,6 @@ case $command in
         echo_heading "Paths"
         table_add_row "project" "${path_to_project}"
         table_add_row "web_root" "${path_to_web_root}"
-        table_add_row "private" "${path_to_private}"
         table_add_row "custom_modules" "${path_to_custom_modules}"
         echo_table
 
