@@ -1,8 +1,16 @@
 # Path definitions
 path_to:
+
+  # Permissions are applied with this as the top directory.
   project: ../..
+
+  # Where is the web root?
   web_root: ../../web
+
+  # Where is your (Drupal) private directory?
   private: ../../private
+
+  # Where are your (Drupal) custom modules?
   custom_modules: ../../web/modules/custom
 
 # General permissions; look to _perms.local.yml for user and group.
@@ -13,13 +21,16 @@ perms:
   writable: ug+w
   executable: ug+x
 
-# A list of files or folders to apply readonly permissions to.
+# For all path configurations below, you may use absolute or relative paths.
+# Relative paths are relative to perms.sh.  You may use globbing in your
+# filenames, e.g. settings*.php
+
+# An array of filepaths to receive perms.readonly
 readonly_paths:
 
-# A list of files or folders to apply writable permissions to.
+# An array of filepaths to receive perms.writable
 writable_paths:
 
-# A list of files or folders to apply executable permissions to.
+# An array of filepaths to receive perms.executable
 executable_paths:
   - perms.sh
-  - ../../bin/install.sh
