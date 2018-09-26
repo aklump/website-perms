@@ -179,9 +179,10 @@ case $command in
         echo_table && echo
 
         echo_heading "Paths"
-        table_add_row "project" "${path_to_project}"
-        table_add_row "web_root" "${path_to_web_root}"
-        table_add_row "custom_modules" "${path_to_custom_modules}"
+        eval $(get_config_keys "path_to")
+        for path in "${path_to[@]}"; do
+            table_add_row "$path" "$(eval echo "\${path_to_$path}")"
+        done
         echo_table
 
         has_failed && exit_with_failure "Configuration errors exist."
