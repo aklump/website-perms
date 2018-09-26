@@ -47,7 +47,7 @@
 <ul>
 <li><p>Use the following one-liner to install this script.  It should be called from the top directory of the tree above, as indicated in the diagram by the <code>.</code></p>
 
-<pre><code>(d="$PWD" &amp;&amp; (test -d opt || mkdir opt) &amp;&amp; (test -d bin || mkdir bin) &amp;&amp; cd opt &amp;&amp; cloudy core &gt; /dev/null &amp;&amp; (test -d website-perms || git clone https://github.com/aklump/website-perms.git) &amp;&amp; (test -s $d/bin/perms || ln -s $d/opt/website-perms/perms.sh $d/bin/perms)) &amp;&amp; ./bin/perms install
+<pre><code>(d="$PWD" &amp;&amp; (test -d opt || mkdir opt) &amp;&amp; (test -d bin || mkdir bin) &amp;&amp; cd opt &amp;&amp; cloudy core &gt; /dev/null &amp;&amp; (test -d website-perms || (git clone https://github.com/aklump/website-perms.git perms &amp;&amp; rm -rf perms/.git)) &amp;&amp; (test -s $d/bin/perms || ln -s $d/opt/perms/perms.sh $d/bin/perms)) &amp;&amp; ./bin/perms install
 </code></pre></li>
 <li><p>Open <em>bin/&#95;perms.local.yml</em> and update the <code>user</code> and <code>group</code> values.</p></li>
 <li>Open <em>bin/&#95;perms.yml</em> and modify as needed.</li>
@@ -99,7 +99,12 @@
 
 <h2>To Update</h2>
 
-<p>Do a git pull from <em>opt/website_perms</em></p>
+<ul>
+<li><p>Use the following one-liner to update to the latest script version.  It should be called from the top directory of the tree above, as indicated in the diagram by the <code>.</code></p>
+
+<pre><code>(cd opt &amp;&amp; git clone https://github.com/aklump/website-perms.git .updating__perms &amp;&amp; rsync -a --delete --exclude=.git* .updating__perms/ perms/; rm -rf .updating__perms)
+</code></pre></li>
+</ul>
 </section>
 
 <div class="search__results">
@@ -114,7 +119,7 @@
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Wed, 26 Sep 2018 09:56:45 -0700</p>
+    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Wed, 26 Sep 2018 10:30:28 -0700</p>
   </div>
 </footer>
 
