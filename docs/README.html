@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>README</title>
+  <link href="search/tipuesearch.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+</head>
+
+<body class="page--readme">
+<header>
+  <div class="pager">
+  <a href="index.html" class="prev index">&laquo;Index</a>
+  <a href="index.html" class="index">Index</a>
+  <a href="_README.html" class="next _README">Perms&raquo;</a>
+</div>
+</header>
+
+  <div class="search__wrapper">
+  <form action="search--results.html">
+    <input type="text" class="search-input" name="q" id="tipue_search_input" autocomplete="off" required>
+  </form>
+</div>
+
+  <h1>README</h1>
+  <div class="breadcrumb"><a href="index.html">Index</a></div>
+
+<section><h2>Requirements</h2>
+
+<p>You must have <a href="https://github.com/aklump/cloudy">Cloudy</a> installed on your system to install this package.</p>
+
+<h2>Installation</h2>
+
+<p>Install per the following structure where <code>.</code> is a directory above web root and inside your SCM repository.</p>
+
+<pre><code>.
+├── bin
+│   ├── perms -&gt; ../opt/website-perms/perms.sh
+│   ├── _perms.custom.sh
+│   ├── _perms.yml
+│   └── _perms.local.yml
+└── opt
+    ├── cloudy
+    └── website-perms
+</code></pre>
+
+<ul>
+<li><p>Use the following one-liner to install this script.  It should be called from the top directory of the tree above, as indicated in the diagram by the <code>.</code></p>
+
+<pre><code>(d="$PWD" &amp;&amp; (test -d opt || mkdir opt) &amp;&amp; (test -d bin || mkdir bin) &amp;&amp; cd opt &amp;&amp; cloudy core &gt; /dev/null &amp;&amp; (test -d website-perms || git clone https://github.com/aklump/website-perms.git) &amp;&amp; (test -s $d/bin/perms || ln -s $d/opt/website-perms/perms.sh $d/bin/perms)) &amp;&amp; ./bin/perms install
+</code></pre></li>
+<li><p>Open <em>bin/&#95;perms.local.yml</em> and update the <code>user</code> and <code>group</code> values.</p></li>
+<li>Open <em>bin/&#95;perms.yml</em> and modify as needed.</li>
+<li>In your CLI enter <code>./bin/perms</code> to get an overview.</li>
+</ul>
+
+<h2>Configuration Files</h2>
+
+<table>
+<thead>
+<tr>
+  <th>Filename</th>
+  <th>Description</th>
+  <th>VCS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><em>&#95;perms.yml</em></td>
+  <td>Configuration shared across all server environments: prod, staging, dev</td>
+  <td>yes</td>
+</tr>
+<tr>
+  <td><em>&#95;perms.local.yml</em></td>
+  <td>Configuration overrides for a single environment; not version controlled.</td>
+  <td>no</td>
+</tr>
+<tr>
+  <td><em>&#95;perms.custom.sh</em></td>
+  <td>Optional.  A custom Bash script to be sourced during the <code>apply</code> command.  Use it for anything custom that is not handled by configuration values.  Think of this as an apply hook.</td>
+  <td>yes</td>
+</tr>
+</tbody>
+</table>
+
+<h2>Custom Configuration</h2>
+
+<ul>
+<li>You may add any additional keys to <code>path_to</code>, which point to paths you may wish to use in <em>perms.custom.sh</em>, they will automatically be made available as variables.  For example <code>$path_to_some_path_of_yours</code> holds the config value and is available in <em>&#95;perms.custom.sh</em>.  They will also be validated to make sure they are paths that exist.</li>
+</ul>
+
+<h2>Usage</h2>
+
+<ul>
+<li>For a configuration overview <code>./bin/perms</code></li>
+<li>To apply permissions: <code>./bin/perms apply</code></li>
+<li>To see all commands use <code>./bin/perms help</code></li>
+</ul>
+
+<h2>To Update</h2>
+
+<p>Do a git pull from <em>opt/website_perms</em></p>
+</section>
+
+<div class="search__results">
+  <div id="tipue_search_content"></div>
+</div>
+
+<footer>
+  <div class="pager">
+  <a href="index.html" class="prev index">&laquo;Index</a>
+  <a href="index.html" class="index">Index</a>
+  <a href="_README.html" class="next _README">Perms&raquo;</a>
+</div>
+  
+  <div id="footer-legaleeze">
+    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Wed, 26 Sep 2018 09:56:45 -0700</p>
+  </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="search/tipuesearch_content.js"></script>
+  <script src="search/tipuesearch_set.js"></script>
+  <script src="search/tipuesearch.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('#tipue_search_input').tipuesearch();
+    });
+  </script>
+<script src="js/core.js"></script>
+</body>
+</html>
+
