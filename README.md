@@ -8,7 +8,7 @@ Install per the following structure where `.` is a directory above web root and 
 
     .
     ├── bin
-    │   ├── perms -> ../opt/perms.sh
+    │   ├── perms -> ../opt/website-perms/perms.sh
     │   ├── _perms.custom.sh
     │   ├── _perms.yml
     │   └── _perms.local.yml
