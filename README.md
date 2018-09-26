@@ -39,9 +39,9 @@ Install per the following structure where `.` is a directory above web root and 
 
 ## Usage
 
-To apply permissions: `./bin/perms apply`
-
-To see all commands use `./bin/perms`
+* For a configuration overview `./bin/perms`
+* To apply permissions: `./bin/perms apply`
+* To see all commands use `./bin/perms help`
     
 ## To Update
 
