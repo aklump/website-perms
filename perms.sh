@@ -19,8 +19,11 @@ function on_pre_config() {
         for file in $(ls $install_source); do
             destination="$WDIR/bin/config/$file"
             [[ "$file" == "_perms.custom.sh" ]] && destination="$WDIR/bin/$file"
-            [[ "$file" == "gitignore" ]] && destination="$ROOT/.gitignore"
-            if ! [ -e "$destination" ]; then
+            if [[ "$file" == "gitignore" ]]; then
+                destination="$WDIR/opt/.gitignore"
+                [ -d $(dirname "$destination") ] || mkdir -p $(dirname $destination)
+                touch "$destination" && echo $(cat "$install_source/$file") >> $destination
+            elif ! [ -e "$destination" ]; then
                 [ -d $(dirname "$destination") ] || mkdir -p $(dirname $destination)
                 cp "$install_source/$file" "$destination" && list_add_item "$file created" || fail_because "Could not copy $file"
             fi
@@ -32,7 +35,7 @@ function on_pre_config() {
 }
 
 # Begin Cloudy Bootstrap
-s="${BASH_SOURCE[0]}";while [ -h "$s" ];do dir="$(cd -P "$(dirname "$s")" && pwd)";s="$(readlink "$s")";[[ $s != /* ]] && s="$dir/$s";done;r="$(cd -P "$(dirname "$s")" && pwd)";source "$r/../../cloudy/cloudy/cloudy.sh" >/dev/null 2>&1; [[ "$ROOT" != "$r" ]] && echo "$(tput setaf 7)$(tput setab 1)Bootstrap failure, cannot load cloudy.sh$(tput sgr0)" && exit 1
+s="${BASH_SOURCE[0]}";while [ -h "$s" ];do dir="$(cd -P "$(dirname "$s")" && pwd)";s="$(readlink "$s")";[[ $s != /* ]] && s="$dir/$s";done;r="$(cd -P "$(dirname "$s")" && pwd)";source "$r/../../cloudy/cloudy/cloudy.sh"; [[ "$ROOT" != "$r" ]] && echo "$(tput setaf 7)$(tput setab 1)Bootstrap failure, cannot load cloudy.sh$(tput sgr0)" && exit 1
 
 
 # End Cloudy Bootstrap
