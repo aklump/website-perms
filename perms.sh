@@ -272,6 +272,7 @@ case $command in
             else
                 echo_heading "Apply custom permissions: $(echo_green $(basename $post_script))"
                 source "$post_script"
+                [ $? -gt 0 ] && fail_because "$(basename $post_script) returned a non-zero status code."
             fi
         done
 
