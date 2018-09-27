@@ -22,7 +22,8 @@ function on_pre_config() {
             if [[ "$file" == "gitignore" ]]; then
                 destination="$WDIR/opt/.gitignore"
                 [ -d $(dirname "$destination") ] || mkdir -p $(dirname $destination)
-                touch "$destination" && echo $(cat "$install_source/$file") >> $destination
+                # todo This will write more than once, so this is not very elegant.  Should figure that out somehow.
+                touch "$destination" && cat "$install_source/$file" >> "$destination"
             elif ! [ -e "$destination" ]; then
                 [ -d $(dirname "$destination") ] || mkdir -p $(dirname $destination)
                 cp "$install_source/$file" "$destination" && list_add_item "$file created" || fail_because "Could not copy $file"
