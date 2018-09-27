@@ -50,11 +50,11 @@ The installation script above will generate the following structure where `.` is
 |----------|----------|---|
 | _perms.yml_ | Configuration shared across all server environments: prod, staging, dev  | yes |
 | _perms.local.yml_ | Configuration overrides for a single environment; not version controlled. | no |
-| _\_perms.custom.sh_ | Optional.  One of any number of custom Bash scripts to be sourced during the `apply` command.  Use it for anything custom that is not handled by configuration values.  The filename(s) are configured in _perms.yml_; see `post_apply_scripts`.  Return non-zero to indicate a failure. You may delete this if not used, but you must remove the path from `post_apply_scripts`.| yes |
+| _\_perms.custom.sh_ | Optional.  One of any number of custom Bash scripts to be sourced during the `apply` command.  Use it for anything custom that is not handled by configuration values.  The filename(s) may be configured; see `post_apply_scripts`.  Return non-zero to indicate a failure. You may delete this if not used, but you must remove the path from `post_apply_scripts`.| yes |
 
 ### Custom Configuration
 
-* You may add any additional keys to `path_to`, which point to paths you may wish to use in _perms.custom.sh_, they will automatically be made available as variables.  For example `$path_to_some_path_of_yours` holds the config value and is available in _\_perms.custom.sh_.  They will also be validated to make sure they are paths that exist.
+* You may add any additional keys to `path_to`, to use them in your `post_apply_scripts`. They will automatically be made available as variables.  For example `$path_to_some_path_of_yours` holds the config value and is available in all `post_apply_scripts`.  They will also be automatically validated to make sure they are paths that do exist.
 
 ## Usage
 
