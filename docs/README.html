@@ -98,7 +98,7 @@
 </tr>
 <tr>
   <td><em>&#95;perms.custom.sh</em></td>
-  <td>Optional.  A custom Bash script to be sourced during the <code>apply</code> command.  Use it for anything custom that is not handled by configuration values.  Think of this as an apply hook.</td>
+  <td>Optional.  One of any number of custom Bash scripts to be sourced during the <code>apply</code> command.  Use it for anything custom that is not handled by configuration values.  The filename(s) are configured in <em>perms.yml</em>; see <code>post_apply_hook</code>.  Return non-zero to indicate a failure. You may delete this if not used, but you must remove the path from <code>post_apply_hook</code>.</td>
   <td>yes</td>
 </tr>
 </tbody>
@@ -137,7 +137,7 @@
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Wed, 26 Sep 2018 18:51:18 -0700</p>
+    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Wed, 26 Sep 2018 19:09:35 -0700</p>
   </div>
 </footer>
 
