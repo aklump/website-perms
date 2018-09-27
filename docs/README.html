@@ -38,11 +38,8 @@
 <h2>Quick Start</h2>
 
 <ul>
-<li><p>Use the following one-liner to install this script.  It should be called from your repository root, as indicated in the installation diagram by the <code>.</code></p>
-
-<pre><code>(d="$PWD" &amp;&amp; (test -d opt || mkdir opt) &amp;&amp; (test -d bin || mkdir bin) &amp;&amp; cd opt &amp;&amp; cloudy core &gt; /dev/null &amp;&amp; (test -d perms || (git clone https://github.com/aklump/website-perms.git perms &amp;&amp; rm -rf perms/.git)) &amp;&amp; (test -s $d/bin/perms || ln -s $d/opt/perms/perms.sh $d/bin/perms)) &amp;&amp; ./bin/perms install
-</code></pre></li>
-<li><p>Open <em>bin/&#95;perms.local.yml</em> and update the <code>user</code> and <code>group</code> values.</p></li>
+<li>Install in your repository root using <code>cloudy pm-install aklump/perms</code></li>
+<li>Open <em>bin/&#95;perms.local.yml</em> and update the <code>user</code> and <code>group</code> values.</li>
 <li>Open <em>bin/&#95;perms.yml</em> and modify as needed.</li>
 <li>In your CLI enter <code>./bin/perms</code> to get an overview.</li>
 </ul>
@@ -139,7 +136,7 @@
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Thu, 27 Sep 2018 12:44:33 -0700</p>
+    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Thu, 27 Sep 2018 15:50:31 -0700</p>
   </div>
 </footer>
 
