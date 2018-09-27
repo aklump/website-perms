@@ -54,7 +54,7 @@ The installation script above will generate the following structure where `.` is
 
 ### Custom Configuration
 
-* You may add any additional keys to `path_to`, which point to paths you may wish to use in _perms.custom.sh_, they will automatically be made available as variables.  For example `$path_to_some_path_of_yours` holds the config value and is available in _\_perms.custom.sh_.  They will also be validated to make sure they are paths that exist.
+* You may add any additional keys to `path_to`, to use them in your `post_apply_scripts`. They will automatically be made available as variables.  For example `$path_to_some_path_of_yours` holds the config value and is available in all `post_apply_scripts`.  They will also be automatically validated to make sure they are paths that do exist.
 
 ## Usage
 
