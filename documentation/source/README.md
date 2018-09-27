@@ -50,7 +50,7 @@ The installation script above will generate the following structure where `.` is
 |----------|----------|---|
 | _perms.yml_ | Configuration shared across all server environments: prod, staging, dev  | yes |
 | _perms.local.yml_ | Configuration overrides for a single environment; not version controlled. | no |
-| _\_perms.custom.sh_ | Optional.  One of any number of custom Bash scripts to be sourced during the `apply` command.  Use it for anything custom that is not handled by configuration values.  The filename(s) are configured in _perms.yml_; see `post_apply_hook`.  Return non-zero to indicate a failure. You may delete this if not used, but you must remove the path from `post_apply_hook`.| yes |
+| _\_perms.custom.sh_ | Optional.  One of any number of custom Bash scripts to be sourced during the `apply` command.  Use it for anything custom that is not handled by configuration values.  The filename(s) are configured in _perms.yml_; see `post_apply_scripts`.  Return non-zero to indicate a failure. You may delete this if not used, but you must remove the path from `post_apply_scripts`.| yes |
 
 ### Custom Configuration
 
