@@ -266,7 +266,7 @@ case $command in
         # Source all paths indicated by post_apply_scripts.
         #
         for post_script in "${post_apply_scripts[@]}"; do
-            echo_heading "Apply custom permissions: $(basename $post_script)"
+            echo_heading "Apply custom permissions: $(echo_green $(basename $post_script))"
             if [ ! -f "$post_script" ]; then
                 fail_because "Could not source post_apply_script at $post_script"
             else
