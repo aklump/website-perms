@@ -38,7 +38,7 @@
 <h2>Quick Start</h2>
 
 <ul>
-<li><p>Use the following one-liner to install this script.  It should be called from the top directory of the tree above, as indicated in the installation diagram by the <code>.</code></p>
+<li><p>Use the following one-liner to install this script.  It should be called from your repository root, as indicated in the installation diagram by the <code>.</code></p>
 
 <pre><code>(d="$PWD" &amp;&amp; (test -d opt || mkdir opt) &amp;&amp; (test -d bin || mkdir bin) &amp;&amp; cd opt &amp;&amp; cloudy core &gt; /dev/null &amp;&amp; (test -d perms || (git clone https://github.com/aklump/website-perms.git perms &amp;&amp; rm -rf perms/.git)) &amp;&amp; (test -s $d/bin/perms || ln -s $d/opt/perms/perms.sh $d/bin/perms)) &amp;&amp; ./bin/perms install
 </code></pre></li>
@@ -53,7 +53,7 @@
 
 <h2>Installation</h2>
 
-<p>The installation script above will generate the following structure where <code>.</code> is a directory above web root and inside your SCM repository.</p>
+<p>The installation script above will generate the following structure where <code>.</code> is your repository root.</p>
 
 <pre><code>.
 ├── bin
@@ -62,9 +62,11 @@
 │   └── config
 │       ├── perms.yml
 │       └── perms.local.yml
-└── opt
-    ├── cloudy
-    └── perms
+├── opt
+│   ├── cloudy
+│   └── aklump
+│       └── perms
+└── {public web root}
 </code></pre>
 
 <h3>To Update</h3>
@@ -137,7 +139,7 @@
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Wed, 26 Sep 2018 19:14:21 -0700</p>
+    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Thu, 27 Sep 2018 12:44:33 -0700</p>
   </div>
 </footer>
 
