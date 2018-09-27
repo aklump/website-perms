@@ -1,27 +1,27 @@
-# Add this file to source control.  See also _perms.local.yml.
+# Add this file to source control.  See also perms.local.yml.
 # For all path configurations, you may use absolute or relative paths.
-# Relative paths are relative to perms.sh.  You may use globbing in your
-# filenames, e.g. settings*.php
+# Relative paths are relative to the repository root.  You may use globbing in
+# your filenames, e.g. settings*.php
 
 # Path definitions
 path_to:
 
   # Permissions are applied with this as the top directory.
-  project: ../..
+  project: .
 
   # Where is the web root?
-  web_root: ../../web
+  web_root: web
 
   # Where is your private directory?  For Drupal sites that use something like
-  # ../../private/default/files you would enter ../../private.
-  private: ../../private
+  # private/default/files you would enter private.
+  private: private
 
   # Where are your (Drupal) custom modules?
-  custom_modules: ../../web/modules/custom
+  custom_modules: web/modules/custom
 
 # An array of custom bash scripts which will be sourced at the end of apply
 post_apply_scripts:
-  - ../../bin/_perms.custom.sh
+  - bin/_perms.custom.sh
 
 # General permissions; look to _perms.local.yml for user and group.
 perms:
@@ -39,4 +39,4 @@ writable_paths:
 
 # An array of filepaths to receive perms.executable
 executable_paths:
-  - perms.sh
+  - opt/aklump/perms/perms.sh
