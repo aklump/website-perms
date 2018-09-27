@@ -19,6 +19,10 @@ path_to:
   # Where are your (Drupal) custom modules?
   custom_modules: ../../web/modules/custom
 
+# An array of custom bash scripts which will be sourced at the end of apply
+post_apply_scripts:
+  - ../../bin/_perms.custom.sh
+
 # General permissions; look to _perms.local.yml for user and group.
 perms:
   files: 640

@@ -35,7 +35,7 @@ The installation script above will generate the following structure where `.` is
     │       └── perms.local.yml
     └── opt
         ├── cloudy
-        └── perms
+        └── perm
 
     
 ### To Update

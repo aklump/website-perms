@@ -53,6 +53,7 @@ exit_with_failure_if_empty_config "path_to.project"
 exit_with_failure_if_empty_config "path_to.web_root"
 exit_with_failure_if_empty_config "path_to.private"
 
+eval $(get_config_path -a "post_apply_scripts")
 eval $(get_config -a "perms.readonly" "go-w")
 eval $(get_config -a "perms.writable" "ug+w")
 eval $(get_config -a "perms.executable" "ug+x")
@@ -262,9 +263,16 @@ case $command in
 
         #
         #
-        # Add any custom to the project extensions as _perms.custom.sh
+        # Source all paths indicated by post_apply_scripts.
         #
-        test -f "$ROOT/_perms.custom.sh" && echo_heading "Apply custom permissions" && source "$ROOT/_perms.custom.sh"
+        for post_script in "${post_apply_scripts[@]}"; do
+            echo_heading "Apply custom permissions: $(basename $post_script)"
+            if [ ! -f "$post_script" ]; then
+                fail_because "Could not source post_apply_script at $post_script"
+            else
+                source "$post_script"
+            fi
+        done
 
         has_failed && exit_with_failure
         exit_with_success
