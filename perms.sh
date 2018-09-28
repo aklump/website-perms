@@ -202,6 +202,8 @@ case $command in
         done
         echo_table
 
+        event_dispatch "show_info"
+
         has_failed && exit_with_failure "Configuration errors exist."
         exit_with_success "Config OK"
     ;;
