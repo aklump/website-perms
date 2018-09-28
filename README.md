@@ -39,9 +39,7 @@ The installation script above will generate the following structure where `.` is
     
 ### To Update
 
-- Use the following one-liner to update to the latest script version.  It should be called from the top directory of the tree above, as indicated in the diagram by the `.`
-
-      (cd opt && git clone https://github.com/aklump/website-perms.git .updating__perms && rsync -a --delete --exclude=.git* .updating__perms/ perms/; rm -rf .updating__perms)
+- Update to the latest version from your repo root: `cloudy pm-update aklump/perms`
 
 ## Configuration Files
 
