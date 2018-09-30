@@ -162,10 +162,10 @@ case $command in
         echo_heading "Ownership and Permission Settings"
         table_add_row "user" "$perms_user"
         table_add_row "group" "$perms_group"
-        table_add_row "files" "$perms_files"
         table_add_row "directories" "$perms_dirs"
-        table_add_row "writable" "$perms_writable"
+        table_add_row "files" "$perms_files"
         table_add_row "readonly" "$perms_readonly"
+        table_add_row "writable" "$perms_writable"
         table_add_row "executable" "$perms_executable"
         echo_table && echo
 
