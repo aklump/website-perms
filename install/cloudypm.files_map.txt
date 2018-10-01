@@ -1,0 +1,4 @@
+* ../../../bin/config/*
+gitignore ../../../opt/.gitignore
+_perms.custom.sh ../../../bin/_perms.custom.sh
+cloudypm.files_map.txt

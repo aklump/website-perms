@@ -13,26 +13,7 @@ CONFIG="perms.core.yml";
 
 # TODO: Event handlers and other functions go here or source another file.
 function on_pre_config() {
-    if [[ "$(get_command)" == "install" ]]; then
-        install_source="$ROOT/install"
-        list_clear
-        for file in $(ls $install_source); do
-            destination="$WDIR/bin/config/$file"
-            [[ "$file" == "_perms.custom.sh" ]] && destination="$WDIR/bin/$file"
-            if [[ "$file" == "gitignore" ]]; then
-                destination="$WDIR/opt/.gitignore"
-                [ -d $(dirname "$destination") ] || mkdir -p $(dirname $destination)
-                # todo This will write more than once, so this is not very elegant.  Should figure that out somehow.
-                touch "$destination" && cat "$install_source/$file" >> "$destination"
-            elif ! [ -e "$destination" ]; then
-                [ -d $(dirname "$destination") ] || mkdir -p $(dirname $destination)
-                cp "$install_source/$file" "$destination" && list_add_item "$file created" || fail_because "Could not copy $file"
-            fi
-        done
-        has_failed && exit_with_failure
-        echo_green_list
-        exit_with_success "Installation complete."
-    fi
+    [[ "$(get_command)" == "install" ]] && exit_with_install
 }
 
 # Begin Cloudy Bootstrap
