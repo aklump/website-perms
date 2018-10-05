@@ -1,4 +1,4 @@
 name: aklump/perms
 clone_from: https://github.com/aklump/website-perms
 entry_script: perms.sh
-on_install: install
+on_install: init
