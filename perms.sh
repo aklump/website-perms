@@ -134,8 +134,6 @@ for i in $(find "${path_to_web_root}" -name '.htpasswd' -type f); do
    readonly_paths=("${readonly_paths[@]}" "$i")
 done
 
-
-
 # Handle other commands.
 case $command in
     info)
@@ -237,12 +235,17 @@ case $command in
 
         # Hide all /docs/public_html folders by adding an .htaccess with deny from all.
         echo_heading "Add \"deny from all\" for documentation directories"
+
+        # This is the old style.
         documentation_dirs=($(find "${path_to_web_root}" -depth -wholename "*docs/public_html"))
+
+        # This is the newer style
         documentation_dirs=("${documentation_dirs[@]}" "${path_to_project}/docs")
+
         if [ ${#documentation_dirs[@]} -gt 0 ]; then
             echo_list__array=()
             for dir in "${documentation_dirs[@]}"; do
-                if [ ! -f "$dir/.htaccess" ]; then
+                if [ -d $dir ] && [ ! -f "$dir/.htaccess" ]; then
                     echo_list__array=("${echo_list__array[@]}" "Writing $dir/.htaccess")
                     echo "deny from all" > "$dir/.htaccess"
                 fi
