@@ -119,7 +119,7 @@ if [ -d "${path_to_web_root}/sites/" ]; then
         i="${path_to_web_root}/sites/$i/"
         if [ -d "$i" ]; then
             readonly_paths=("${readonly_paths[@]}" "$i")
-            for j in $(ls "$i"settings*.php); do
+            for j in $(ls "$i"settings*.php 2>/dev/null); do
                 readonly_paths=("${readonly_paths[@]}" "$j")
             done
         fi
