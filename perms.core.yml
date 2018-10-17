@@ -4,7 +4,7 @@ additional_config:
   - ../../../bin/config/perms.yml
   - ../../../bin/config/perms.local.yml
 default_command: info
-version: 1.0.3
+version: 1.0.4
 commands:
   info:
     help: 'Show configuration info'
