@@ -11,8 +11,9 @@ This script helps manage website permissions by giving you a clean YAML configur
 ## Quick Start
 
 - Install in your repository root using `cloudy pm-install aklump/perms`
-- Open _bin/\_perms.local.yml_ and update the `user` and `group` values.
-- Open _bin/\_perms.yml_ and modify as needed.
+- Open _bin/config/perms.local.yml_ and update the `user` and `group` values.
+- Open _bin/config/perms.yml_ and modify as needed.
+- Add custom code to _bin/_perms.custom.sh_, or delete it and comment out related lines in _bin/config/perms.yml_.
 - In your CLI enter `./bin/perms` to get an overview.
 
 ## Requirements
