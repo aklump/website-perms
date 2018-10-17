@@ -33,6 +33,7 @@ perms:
 
 # An array of filepaths to receive perms.readonly
 readonly_paths:
+  - bin/config/*.yml
 
 # An array of filepaths to receive perms.writable
 writable_paths:
