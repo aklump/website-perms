@@ -32,6 +32,7 @@ perms:
   executable: ug+x
 
 # An array of filepaths to receive perms.readonly
+# - Drupal settings files will be detected automatically, and needn't be listed.
 readonly_paths:
   - bin/config/*.yml
 
