@@ -38,7 +38,6 @@ for key in "${path_to_keys[@]}"; do
 done
 exit_with_failure_if_empty_config "path_to.project"
 exit_with_failure_if_empty_config "path_to.web_root"
-exit_with_failure_if_empty_config "path_to.private"
 
 eval $(get_config_path -a "post_apply_scripts")
 eval $(get_config -a "perms.readonly" "go-w")
@@ -73,10 +72,12 @@ if [ -d "${path_to_web_root}/sites/" ]; then
 fi
 
 # Drupal private files.
-for i in $(ls "$path_to_private/"); do
-    i="$path_to_private/$i/files"
-    [ -d "$i" ] && writable_paths=("${writable_paths[@]}" "$i")
-done
+if [[ "$path_to_private" ]]; then
+  for i in $(ls "$path_to_private/"); do
+      i="$path_to_private/$i/files"
+      [ -d "$i" ] && writable_paths=("${writable_paths[@]}" "$i")
+  done
+fi
 
 #
 # Calculate executable paths
