@@ -93,19 +93,19 @@ declare -a loft_docs_dirs=("${path_to_project}");
 [[ "${path_to_custom_modules}" ]] && loft_docs_dirs=("${loft_docs_dirs[@]}" "${path_to_custom_modules}")
 for path in "${loft_docs_dirs[@]}"; do
     for i in $(find "$path" -wholename "*/core/update.sh"); do
-        executable_paths=("${executable_paths[@]}" $i)
+        executable_paths=("${executable_paths[@]}" "$i")
     done
     for i in $(find "$path" -wholename "*/core/clean.sh"); do
-        executable_paths=("${executable_paths[@]}" $i)
+        executable_paths=("${executable_paths[@]}" "$i")
     done
     for i in $(find "$path" -wholename "*/core/compile.sh"); do
-        executable_paths=("${executable_paths[@]}" $i)
+        executable_paths=("${executable_paths[@]}" "$i")
     done
     for i in $(find "$path" -wholename "*/core/update.sh"); do
-        executable_paths=("${executable_paths[@]}" $i)
+        executable_paths=("${executable_paths[@]}" "$i")
     done
     for i in $(find "$path" -wholename "*/core/includes/webpage.tipuesearch.sh"); do
-        executable_paths=("${executable_paths[@]}" $i)
+        executable_paths=("${executable_paths[@]}" "$i")
     done
 done
 
