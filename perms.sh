@@ -205,7 +205,7 @@ case $command in
             echo_heading "Make explicit paths read-only"
             echo_list__array=()
             for path in "${readonly_paths[@]}"; do
-              chmod -R $perms_readonly $path
+              chmod -R $perms_readonly "$path"
               echo_list__array=("${echo_list__array[@]}" "$path")
             done
             has_option "v" && echo_green_list
@@ -217,7 +217,7 @@ case $command in
             echo_heading "Make explicit paths writable"
             echo_list__array=()
             for path in "${writable_paths[@]}"; do
-              chmod -R $perms_writable $path
+              chmod -R $perms_writable "$path"
               echo_list__array=("${echo_list__array[@]}" "$path")
             done
             has_option "v" && echo_green_list
@@ -229,7 +229,7 @@ case $command in
             echo_heading "Grant explicit execute permissions"
             echo_list__array=()
             for path in "${executable_paths[@]}"; do
-                chmod $perms_executable $path || fail "Could not give execute perms to $path."
+                chmod $perms_executable "$path" || fail "Could not give execute perms to $path."
                 echo_list__array=("${echo_list__array[@]}" "$path")
             done
             has_option "v" && echo_green_list
