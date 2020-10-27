@@ -42,3 +42,9 @@ writable_paths:
 # An array of filepaths to receive perms.executable
 executable_paths:
   - opt/aklump/perms/perms.sh
+
+# An array of paths to ignore.  You will need to add items to this array that
+# are owned by root and cannot be changed, otherwise the process will report
+# that it failed.
+ignored_paths:
+  - app/web/.well-known

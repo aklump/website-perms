@@ -2,7 +2,7 @@
 
 #
 # @file
-# Lorem ipsum dolar sit amet consectador.
+# The CLI controller file for the install app.
 #
 
 # Define the configuration file relative to this script.
@@ -11,15 +11,12 @@ CONFIG="perms.core.yml";
 # Uncomment this line to enable file logging.
 #LOGFILE="perms.log"
 
-# TODO: Event handlers and other functions go here or source another file.
 function on_pre_config() {
     [[ "$(get_command)" == "init" ]] && exit_with_init
 }
 
 # Begin Cloudy Bootstrap
 s="${BASH_SOURCE[0]}";while [ -h "$s" ];do dir="$(cd -P "$(dirname "$s")" && pwd)";s="$(readlink "$s")";[[ $s != /* ]] && s="$dir/$s";done;r="$(cd -P "$(dirname "$s")" && pwd)";source "$r/../../cloudy/cloudy/cloudy.sh"; [[ "$ROOT" != "$r" ]] && echo "$(tput setaf 7)$(tput setab 1)Bootstrap failure, cannot load cloudy.sh$(tput sgr0)" && exit 1
-
-
 # End Cloudy Bootstrap
 
 # Input validation
@@ -56,6 +53,8 @@ perms_chown=${perms_user}
 if [[ "$perms_group" ]]; then
     perms_chown="${perms_chown}:${perms_group}"
 fi
+
+eval $(get_config_path -a "ignored_paths")
 
 #
 # Calculate writable paths.
@@ -148,6 +147,15 @@ case $command in
         table_add_row "readonly" "$perms_readonly"
         table_add_row "writable" "$perms_writable"
         table_add_row "executable" "$perms_executable"
+        echo_table && echo
+
+        echo_heading "Ignored Paths Relative to ${path_to_project}"
+        for i in "${ignored_paths[@]}"; do
+            row="${i/$path_to_project/}"
+            row=${row#/}
+            [ ! -e $i ] && row="$(echo_red $row)" && fail_because "$(basename $i) not found."
+            table_add_row "$row"
+        done
         echo_table && echo
 
         echo_heading "Read Only Paths Relative to ${path_to_project}"
