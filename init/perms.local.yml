@@ -5,3 +5,6 @@ perms:
   user: user
   group: group
 
+executable_paths:
+#  - vendor/bin/*
+#  - node_modules/.bin/*
