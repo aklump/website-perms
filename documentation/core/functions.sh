@@ -77,7 +77,7 @@ function get_version() {
 #
 function realpath() {
   local path=$($docs_php "$CORE/includes/realpath.php" "$1")
-  echo $path
+  echo "$path"
 }
 
 
@@ -102,6 +102,7 @@ function load_config() {
   docs_plugins_theme='twig'
   docs_partial_extension='.md'
   docs_markdown_extension='.md'
+  docs_twig_preprocess_extension='.twig.md'
   docs_kit_dir='kit'
   docs_website_dir='public_html'
   docs_html_dir='html'
@@ -109,13 +110,14 @@ function load_config() {
   docs_text_dir='text'
   docs_drupal_dir='advanced_help'
   docs_cache_dir="$CORE/cache"
-  docs_tmp_dir="$docs_cache_dir/tmp"
+  docs_tmp_dir="$docs_cache_dir/build"
   docs_todos="_tasklist$docs_markdown_extension"
   docs_version_hook='version_hook.php'
   docs_pre_hooks=''
   docs_post_hooks=''
   docs_outline_auto='outline.auto.json'
   docs_outline_merge='outline.merge.json'
+  docs_not_source_do_not_edit__md=''
 
   # Check for installation if needed.
   if [ ! -f core-config.sh ]; then
@@ -136,16 +138,20 @@ function load_config() {
   fi
 
   # We're looking ultimately for outline.json
-  docs_outline_file=$(find $docs_source_path -name outline.json)
+  docs_outline_file="$(find "$docs_source_path" -name outline.json)"
 
   # If it's not there we'll try to generate from a .ini file.
   if [[ ! "$docs_outline_file" ]]; then
     # Ini file
-    docs_help_ini=$(find $docs_source_path -name *.ini)
+    docs_help_ini="$(find "$docs_source_path" -name *.ini)"
 
     if [[ "$docs_help_ini" ]]; then
       # Convert this to $docs_outline_auto
-      $docs_php "$CORE/includes/ini_to_json.php" "$docs_help_ini" "$docs_source_path" "$docs_source_path/$docs_outline_auto"
+      result=($docs_php "$CORE/includes/ini_to_json.php" "$docs_help_ini" "$docs_source_path" "$docs_source_path/$docs_outline_auto")
+      if [[ $? -ne 0 ]]; then
+        echo_red "$result" && exit
+      fi
+      echo $result
       docs_outline_file="$docs_cache_dir/$docs_outline_auto"
 
       echo "`tty -s && tput setaf 3`You are using the older .ini version of the configutation; consider changing to outline.json, a template has been created for you as '$docs_outline_auto'.  See README for more info.`tty -s && tput op`"
@@ -161,6 +167,13 @@ function load_config() {
   #
   # put anything that comes AFTER parsing config file below this line
   #
+
+  # Override vars from the CLI
+  if [[ $(get_option "website") ]]; then
+    docs_website_dir="$(get_option "website")"
+  fi
+
+  docs_website_dir=$(path_resolve "$docs_root_dir" "$docs_website_dir")
 
   # Determine which is our tpl dir
   if test -e "$PWD/tpl"; then
@@ -217,17 +230,25 @@ function parse_config() {
 # @param string $file
 #
 function do_hook_file() {
-  local file=$1
-  if [[ ${file##*.} == 'php' ]]; then
-    cmd="$docs_php"
-  elif [[ ${file##*.} == 'sh' ]]; then
-    cmd=$docs_bash
+  local file="$1"
+  local type=""
+  if [[ "${file##*.}" == 'php' ]]; then
+    type="php"
+  elif [[ "${file##*.}" == 'sh' ]]; then
+    type="bash"
   fi
-
-  if [[ ! -f $file ]]; then
+  if [[ ! -f "$file" ]]; then
     echo "`tput setaf 1`Hook file not found: $file`tput op`"
-  elif [[ "$cmd" ]]; then
-    $cmd "$file" "$docs_source_path" "$CORE" "$docs_version_file" "$docs_root_dir" "$docs_root_dir/$docs_website_dir" "$docs_root_dir/$docs_html_dir" "$docs_root_dir/$docs_text_dir" "$docs_root_dir/$docs_drupal_dir" "$CORE/cache/source"
+  elif [[ "$type" ]]; then
+    case $type in
+    php)
+      $docs_php "$CORE/includes/do_php_hook.php" "$file" "$docs_source_path" "$CORE" "$docs_version_file" "$docs_root_dir" "$docs_website_dir" "$docs_root_dir/$docs_html_dir" "$docs_root_dir/$docs_text_dir" "$docs_root_dir/$docs_drupal_dir" "$CORE/cache/source" "$outline_file"
+       ;;
+    bash)
+      $docs_bash "$file" "$docs_source_path" "$CORE" "$docs_version_file" "$docs_root_dir" "$docs_website_dir" "$docs_root_dir/$docs_html_dir" "$docs_root_dir/$docs_text_dir" "$docs_root_dir/$docs_drupal_dir" "$CORE/cache/source" "$outline_file"
+       ;;
+    esac
+
   fi
 }
 
@@ -237,28 +258,33 @@ function do_hook_file() {
 function do_pre_hooks() {
     local hook
 
+    # Flush cache files and make the dirs that might get used in the pre_hooks.
+    [[ "$docs_cache_dir" ]] && [[ -d "$docs_cache_dir" ]] && rm -r "$docs_cache_dir" || exit 1;
+    mkdir -p "$docs_cache_dir/source"
+
     # Hack to fix color, no time to figure out 2015-11-14T13:58, aklump
     #  echo "`tty -s && tput setaf 6``tty -s && tput op`"
+
     echo "Running pre-compile hooks..."
     for hook in ${docs_pre_hooks[@]}; do
-        hook=$(realpath "$docs_hooks_dir/$hook")
+        hook="$(realpath "$docs_hooks_dir/$hook")"
         echo_green "Hook file: $hook"
-        echo_yellow "$(do_hook_file $hook)"
+        echo_yellow "$(do_hook_file "$hook")"
     done
 
-    # Empty out the page data cache.
-    test -e "$docs_cache_dir/page_data.json" && rm "$docs_cache_dir/page_data.json"
+    # Generate an outline from the file structure.
+    if [[ ! "$docs_outline_file" ]]; then
+        # Create $docs_outline_auto from the file contents
+        result=$($docs_php "$CORE/includes/files_to_json.inc" "$docs_source_path" "$docs_cache_dir/source" "$docs_cache_dir/$docs_outline_auto" "$docs_source_dir/$docs_outline_merge")
+        if [[ $? -ne 0 ]]; then
+          echo_red "$result" && exit
+        fi
+        echo $result
+        docs_outline_file="$docs_cache_dir/$docs_outline_auto"
+    fi
 
     # Internal pre hooks should always come after the user-supplied
     do_todos
-
-    # Generate an outline from the file structure
-    if [[ ! "$docs_outline_file" ]]; then
-        # Create $docs_outline_auto from the file contents
-        $docs_php "$CORE/includes/files_to_json.inc" "$docs_source_path" "$docs_cache_dir/source" "$docs_cache_dir/$docs_outline_auto" "$docs_source_dir/$docs_outline_merge"
-
-        docs_outline_file="$docs_cache_dir/$docs_outline_auto"
-    fi
 }
 
 #
@@ -267,18 +293,24 @@ function do_pre_hooks() {
 function do_todos() {
   if [[ "$docs_todos" ]]; then
     local global="$docs_cache_dir/source/$docs_todos"
-    echo "Aggregating todo items..."
-
-    if [[ ! -f "$global" ]]; then
-      touch "$global";
-    fi
-
-    for file in $(find $docs_source_dir -type f -iname "*$docs_markdown_extension"); do
+    local first_run=true
+    for file in $(find "$docs_source_dir" -type f -iname "*$docs_markdown_extension"); do
       if [ "$file" != "$global" ]; then
-        # Send a single file over for processing todos via php
-        $docs_php "$CORE/includes/todos.inc" "$file" "$global"
+
+        # Send a single file over for processing todos via php.  If it returns
+        # 2 then the settings tell us not to aggregate.  1 means there are no
+        # items. 0 means aggregation occurred.
+        $docs_php "$CORE/includes/todos.inc" "$PWD/$file" "$docs_todos" "$CORE/cache/source" "$docs_outline_file" "$first_run"
+        if [[ "$?" -eq 2 ]]; then
+
+          # The settings are disabled for aggregation.
+          return;
+        fi
+        first_run=false
       fi
     done
+    # After the dots from PHP we need a new line when done.
+    echo ""
   fi
 }
 
@@ -307,14 +339,16 @@ function do_post_hooks() {
 #
 function do_plugin_handler() {
     local hook_file
-    hook_file=$($docs_php $CORE/includes/plugins.php "$CORE/plugins/" "$1" "$2")
+
+    hook_file="$($docs_php "$CORE/includes/plugins.php" "$CORE/plugins/" "$1" "$2")"
     test -f "$hook_file" && source "$hook_file"
 }
 
 function get_plugin_path() {
     local hook_file
-    hook_file=$($docs_php $CORE/includes/plugins.php "$CORE/plugins/" "$1" "$2")
-    echo $hook_file
+
+    hook_file="$($docs_php "$CORE/includes/plugins.php" "$CORE/plugins/" "$1" "$2")"
+    echo "$hook_file"
 }
 
 ##
@@ -363,4 +397,57 @@ function is_disabled() {
    fi
   done
   return $in
+}
+
+# Ensure that a pattern directory exists, and all install/*/* files are present.
+#
+# $1 - The final path, relative or absolute.
+# $2 - The directory inside the install directory to copy from, if needed.
+#
+# Returns 0 if the operation fails.
+function ensure_pattern_directory() {
+    local path="$1"
+    local install_dir="$2"
+
+    if [[ "${path:0:1}" != '/' ]]; then
+        path="$docs_root_dir/$path"
+    fi
+    mkdir -p "$path" || return 1
+    rsync -a "$CORE/install/patterns/$install_dir/" "$path/" || return 1
+}
+
+function has_option() {
+  for var in "${user_cli_options[@]}"; do
+    if [[ "$var" =~ $1 ]]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
+function get_option() {
+  for var in "${user_cli_options[@]}"; do
+    if [[ "$var" =~ ^(.*)\=(.*) ]] && [ ${BASH_REMATCH[1]} == $1 ]; then
+      echo ${BASH_REMATCH[2]}
+      return
+    fi
+  done
+  echo $2
+}
+
+# Resolve a path to an absolute link; if already absolute, do nothing.
+#
+# $1 - The dirname to use if $2 is not absolute
+# $2 - The path to make absolute if not starting with /
+#
+# Returns nothing
+function path_resolve() {
+    local dirname="${1%/}"
+    local path="$2"
+
+    [[ "${path:0:1}" != '/' ]] && path="$dirname/$path"
+    [ ! -e "$path" ] && echo "$path" && return
+
+    # If it exists, we will echo the real path.
+    echo "$(cd "$(dirname $path)" && pwd)/$(basename "$path")"
 }

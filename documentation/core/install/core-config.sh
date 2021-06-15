@@ -38,6 +38,12 @@ lynx = $(which lynx)
 #drupal_dir = '../help'
 
 ##
+# A header to be prepended to markdown README and CHANGELOG; set to blank to
+# hide header, or edit to suit.  The token "SOURCE" will be replaced with the
+# source path.
+not_source_do_not_edit__md = '<!-- Compiled from SOURCE: DO NOT EDIT -->'
+
+##
 # The file path to an extra README.txt file; when README.md is compiled and
 # this variable is set, the .txt version will be copied to this location.  Notice the second path will also copy the md version.  If this is not desired then omit the second path
 #
@@ -63,6 +69,7 @@ lynx = $(which lynx)
 # The path to a .info file or a .json file containing 'version' as a first level key, whose value indicates the documentation version.
 # This can be relative to the directory containing core-config.sh or absolute if it begins with a /
 #version_file = "web_package.info"
+#version_hook = "hooks/web_package.info"
 
 #
 # These paths are relative to the directory containing core-config.sh.

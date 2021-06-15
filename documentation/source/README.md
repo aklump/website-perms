@@ -25,18 +25,20 @@ You must have [Cloudy](https://github.com/aklump/cloudy) installed on your syste
 
 The installation script above will generate the following structure where `.` is your repository root.
 
-    .
-    ├── bin
-    │   ├── perms -> ../opt/perms/perms.sh
-    │   ├── _perms.custom.sh
-    │   └── config
-    │       ├── perms.yml
-    │       └── perms.local.yml
-    ├── opt
-    │   ├── cloudy
-    │   └── aklump
-    │       └── perms
-    └── {public web root}
+```text
+.
+├── bin
+│   ├── perms -> ../opt/perms/perms.sh
+│   ├── _perms.custom.sh
+│   └── config
+│       ├── perms.yml
+│       └── perms.local.yml
+├── opt
+│   ├── cloudy
+│   └── aklump
+│       └── perms
+└── {public web root}
+```
 
     
 ### To Update
