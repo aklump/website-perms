@@ -4,7 +4,7 @@ additional_config:
   - bin/config/perms.yml
   - bin/config/perms.local.yml
 default_command: info
-version: 1.0.12
+version: 1.0.13
 commands:
   info:
     help: 'Show configuration info'
@@ -12,9 +12,16 @@ commands:
     help: 'Show this help screen.'
   apply:
     help: 'Apply permissions to the defined environment.'
-    options: { verbose: { help: 'Show more verbose output.', type: boolean, aliases: [v] } }
+    options:
+      verbose:
+        help: 'Show more verbose output.'
+        type: boolean
+        aliases:
+          - v
   clear-cache:
-    aliases: [clearcache, cc]
+    aliases:
+      - clearcache
+      - cc
     help: 'Clear all cached data.'
   init:
     help: 'Initialize local configuration files.'
@@ -23,7 +30,9 @@ translate:
     - 'Completed successfully.'
     - Failed.
   strings:
-    en: ['All permissions set.', 'Failed setting permissions.']
+    en:
+      - 'All permissions set.'
+      - 'Failed setting permissions.'
 name: 'Website Permissions'
 description: 'A script to make website file permission management super easy.'
 homepage: 'https://github.com/aklump/website-perms'
