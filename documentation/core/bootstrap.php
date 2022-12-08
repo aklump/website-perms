@@ -17,11 +17,12 @@ use AKlump\Data\Data;
  *                        name in the todo item.
  *
  * @return array
+ *
+ * @// TODO Replace with Lexer class.
  */
 function parse_todos($string, $prefix = '') {
   $todos = array();
   if (is_string($string)
-    //&& preg_match_all('/- \[ \] @todo.*$/m', $string, $matches)) {
     && preg_match_all('/- \[ \] .*$/m', $string, $matches)
   ) {
 
@@ -287,8 +288,10 @@ function _json_array_merge_by_id(array $a, array $b) {
  */
 function _json_array_replace_by_id(array $a, array $b) {
   foreach ($b as $item) {
+    $item += ['id' => ''];
     $added = FALSE;
     foreach ($a as &$a_item) {
+      $a_item += ['id' => ''];
       if ($a_item['id'] == $item['id']) {
         $a_item = array_replace_recursive($a_item, $item);
         $added = TRUE;

@@ -15,7 +15,14 @@ namespace AKlump\LoftLib\Code;
  * @link https://codex.wordpress.org/Shortcode_API#Handling_Attributes
  * @link https://codex.wordpress.org/Shortcode_API#Enclosing_vs_self-closing_shortcodes
  */
-final class ShortCodes {
+final class ShortCodes implements ShortCodesInterface {
+
+  /**
+   * The regex used to locate whitespace in shortcodes.
+   *
+   * @var string
+   */
+  const WS_REGEX = '(?:\s|&nbsp;)';
 
   /**
    * @var array
@@ -23,20 +30,7 @@ final class ShortCodes {
   static $cache = [];
 
   /**
-   * Prepare/alter $base before inflating.
-   *
-   * Use this method to cleanup markup before calling ::inflate on $base.  For
-   * example you may want to remove <p/> tags that are wrapping a shortcode
-   * that returns a <p/> so that you don't have nexted <p/> tags.
-   *
-   * @param string $base
-   *   The string that contains elements to be replaced.
-   * @param array $element_value_map
-   *   An array keyed by element name, whose values are callables that receive
-   *   ($base) only if the shortcode element name exists in $base.  Each
-   *   callable must return $base mutated as necessary.  The callback order is
-   *   dependent on the order of keys in $element_value_map, not the order of
-   *   the shortcodes as they appear in $base.
+   * {@inheritdoc}
    */
   public static function prepare($base, array $element_value_map) {
     $callables = array_intersect_key($element_value_map, array_flip(array_map(function ($item) {
@@ -50,43 +44,7 @@ final class ShortCodes {
   }
 
   /**
-   * Replace React-style element names with rendered array values.
-   *
-   * @param string $base
-   *   The string that contains elements to be replaced.
-   * @param array $element_value_map
-   *   An array keyed by element name, whose values are strings, callables, or
-   *   objects that can be cast to string.  Be aware that element names must be
-   *   Upper-camel, a.k.a. PascalCase.  Callables receive ($inner_html,
-   *   $attributes).
-   *
-   * @code
-   * <div>
-   *   <h1><Title/></h1>
-   *   <List/>
-   *   <Link text="click"/>
-   * </div>
-   *
-   * <?php
-   * $element_value_map = [
-   *   // String values are fine.
-   *   'Title' => t('Static title'),
-   *
-   *   // Callables will receive an object of attributes pulled from the
-   *   markup and inner html if it exists.
-   *   'Link' => function ($inner_html, $attributes) {
-   *     return t('<a href="!url"></a>', ['!url' => $attributes->text])];
-   *   },
-   * ];
-   *
-   * $html = ShortCodes::inflate($base, $element_value_map);
-   * @endcode
-   *
-   * @return string
-   *   $base with all replacements made.
-   *
-   * @link https://github.com/airbnb/javascript/tree/master/react#naming
-   * @link https://reactjs.org/docs/dom-elements.html
+   * {@inheritdoc}
    */
   public static function inflate($base, array $element_value_map) {
     // These must be sorted longest first or replacement is messed up.
@@ -101,12 +59,12 @@ final class ShortCodes {
     });
     $names_regex = array_map('preg_quote', $element_names);
     foreach ($names_regex as $name_regex) {
-      $enclosing = '/\[\s*(' . $name_regex . ')\s*([^\]]*)\s*\](.*?)\[\/(' . $name_regex . ')\]/';
+      $enclosing = sprintf('/\[%s*(%s)%s*([^\]]*)%s*\](.*?)\[\/(%s)\]/', self::WS_REGEX, $name_regex, self::WS_REGEX, self::WS_REGEX, $name_regex);
       $base = preg_replace_callback($enclosing, function ($matches) use ($base, $element_value_map) {
         return self::getElementReplacementValue($matches[1], $matches[2], $matches[3], $element_value_map);
       }, (string) $base);
 
-      $self_closing = '/\[\s*(' . $name_regex . ')\s*(.*?)\s*\]/';
+      $self_closing = sprintf('/\[%s*(%s)%s*(.*?)%s*\]/', self::WS_REGEX, $name_regex, self::WS_REGEX, self::WS_REGEX);
       $base = preg_replace_callback($self_closing, function ($matches) use ($base, $element_value_map) {
         return self::getElementReplacementValue($matches[1], $matches[2], NULL, $element_value_map);
       }, (string) $base);
@@ -116,30 +74,21 @@ final class ShortCodes {
   }
 
   /**
-   * Extract all React-style elements from a string.
-   *
-   * @param string $base
-   *   The body of copy to search in.
-   *
-   * @return array
-   *   If found, each array item points to an element and contains these keys:
-   *   - name string The tagname
-   *   - inner_html string The inner html if it exists.
-   *   - attributes array An array of key/value attributes if exists.s
+   * {@inheritdoc}
    */
   public static function getElements($base) {
     $cid = md5($base);
     if (!isset(static::$cache['elements'][$cid])) {
 
       // Generate a set of paired matchers based on opening tags.
-      $self_closing = '\[\s*([a-z0-9_]*)\s*([^\]\/]*)\s*\]';
+      $self_closing = sprintf('\[%s*([a-z0-9_]*)%s*([^\]\/]*)%s*\]', self::WS_REGEX, self::WS_REGEX, self::WS_REGEX);
       preg_match_all("/($self_closing)/", $base, $matches, PREG_SET_ORDER);
       $matchers = array_map(function ($match) {
         $tag = $match[2];
-        $self_closing = '\[\s*(%s)\s*([^\]\/]*)\s*\]';
-        $enclosing = '\[\s*(%s)\s*([^\]\/]*)\s*\](.*?)\[\/\s*%s+\]';
+        $self_closing = sprintf('\[%s*(%s)%s*([^\]\/]*)%s*\]', self::WS_REGEX, $tag, self::WS_REGEX, self::WS_REGEX);
+        $enclosing = sprintf('\[%s*(%s)%s*([^\]\/]*)%s*\](.*?)\[\/%s*%s+\]', self::WS_REGEX, $tag, self::WS_REGEX, self::WS_REGEX, self::WS_REGEX, $tag);
 
-        return sprintf("/($enclosing)|($self_closing)/", $tag, $tag, $tag);
+        return "/($enclosing)|($self_closing)/";
       }, $matches);
       $elements = [];
       while ($regex = array_shift($matchers)) {

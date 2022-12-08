@@ -6,6 +6,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.5.0] - 2021-12-23
+
+### Added
+
+- New interface `\AKlump\LoftLib\Code\ShortCodesInterface`
+- New method `Arrays::getClosestValueTo()`
+
+## [1.4.0] - 2021-07-17
+
+### Added
+
+- Bash::confirm() for user input collection.
+
+## [1.3.0] - 2021-06-27
+
+### Added
+
+- Shortcodes with `&nbsp;` work as if ` `, i.e., `[foo&nbsp;id="5"]lorem[/foo]` is the same as `[foo id="5"]lorem[/foo]`. In earlier versions `&nbsp;` was not supported.
+
 ## [1.2] - 2021-06-05
 
 ### Changed

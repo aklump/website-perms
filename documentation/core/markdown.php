@@ -11,6 +11,7 @@ require_once dirname(__FILE__) . '/vendor/autoload.php';
 
 use AKlump\LoftDocs\Compiler;
 use AKlump\LoftDocs\MarkdownExtra;
+use AKlump\LoftDocs\PageMetaData;
 use AKlump\LoftLib\Bash\Color;
 use AKlump\LoftLib\Storage\FilePath;
 use Webuni\FrontMatter\FrontMatter;
@@ -40,6 +41,9 @@ try {
 
   $path_info = pathinfo($in_file);
 
+  $page_metadata = new PageMetaData([$path_info['dirname']]);
+  $page_metadata->setPageId($path_info['filename']);
+
   // Twig Pre-Processing if ends in .twig.md.
   if (substr($in_file, -1 * strlen($twig_extension)) === $twig_extension) {
     $out_file = $html_output_dir . '/' . preg_replace('/\.twig$/', '', $path_info['filename']) . '.html';
@@ -49,6 +53,8 @@ try {
     ));
 
     $twig_vars = $compiler->getVariables();
+    $twig_vars['meta'] = $page_metadata->get();
+
     $regex = '/^' . preg_quote($static_source_dir, '/') . '/';
     $relative_file = trim(preg_replace($regex, '', $in_file), '/');
     $contents = $twig->render($relative_file, $twig_vars);
@@ -57,15 +63,11 @@ try {
     $compiler->addSourceFile(str_replace($twig_extension, $markdown_extension, $relative_file), $contents);
   }
   else {
+    $contents = $page_metadata->getPage();
     $out_file = $html_output_dir . '/' . $path_info['filename'] . '.html';
-    $contents = file_get_contents($in_file);
   }
 
-  $fm = new FrontMatter();
-  $document = $fm->parse($contents);
-  $contents = $document->getContent();
-  $data = $document->getData();
-
+  $data = $page_metadata->get();
   if (isset($data['twig'])) {
     foreach ($data['twig'] as $find => $replace) {
       $data['tokens']["{{ $find }}"] = $replace;

@@ -81,23 +81,32 @@ function realpath() {
 }
 
 
-##
- # Load the configuration file
- #
- # Lines that begin with [ or # will be ignored
- # Format: Name = "Value"
- # Value does not need wrapping quotes if no spaces
- # File MUST HAVE an EOL char!
- #
+#
+# Load the configuration file
+#
+# Lines that begin with [ or # will be ignored
+# Format: Name = "Value"
+# Value does not need wrapping quotes if no spaces
+# File MUST HAVE an EOL char!
+#
+# $1 - string Optional. Path to the config file to use, defaults to looking one
+# level above $CORE for core-config.sh
+#
+# Returns nothing.
 function load_config() {
+  local path_to_config="$1"
+
+  if [[ ! "$path_to_config" ]]; then
+    path_to_config="$CORE/../core-config.sh"
+  fi
 
   # defaults
   docs_php=$(which php)
   docs_bash=$(which bash)
   docs_lynx=$(which lynx)
   docs_source_dir='source'
-  docs_root_dir=$(realpath "$CORE/..")
-  docs_source_path=$(realpath "$docs_root_dir/$docs_source_dir")
+  docs_root_dir="$(dirname $path_to_config)"
+  docs_source_path="$docs_root_dir/$docs_source_dir"
   docs_plugins_tpl='twig'
   docs_plugins_theme='twig'
   docs_partial_extension='.md'
@@ -109,7 +118,7 @@ function load_config() {
   docs_mediawiki_dir='mediawiki'
   docs_text_dir='text'
   docs_drupal_dir='advanced_help'
-  docs_cache_dir="$CORE/cache"
+  docs_cache_dir="$docs_root_dir/core/cache"
   docs_tmp_dir="$docs_cache_dir/build"
   docs_todos="_tasklist$docs_markdown_extension"
   docs_version_hook='version_hook.php'
@@ -120,7 +129,7 @@ function load_config() {
   docs_not_source_do_not_edit__md=''
 
   # Check for installation if needed.
-  if [ ! -f core-config.sh ]; then
+  if [[ ! -f "$path_to_config" ]]; then
     echo_yellow "Installing..."
     cp "$CORE/install/core-config.sh" "$docs_root_dir/"
     installing=1
@@ -159,7 +168,7 @@ function load_config() {
   fi
 
   # custom
-  parse_config core-config.sh
+  parse_config "$path_to_config"
 
   # Create any necessary directories
   mkdir -p "$docs_cache_dir/source/"
@@ -264,18 +273,21 @@ function do_pre_hooks() {
 
     # Hack to fix color, no time to figure out 2015-11-14T13:58, aklump
     #  echo "`tty -s && tput setaf 6``tty -s && tput op`"
-
-    echo "Running pre-compile hooks..."
-    for hook in ${docs_pre_hooks[@]}; do
-        hook="$(realpath "$docs_hooks_dir/$hook")"
-        echo_green "Hook file: $hook"
-        echo_yellow "$(do_hook_file "$hook")"
-    done
+    if [[ "${docs_pre_hooks[0]}" ]]; then
+      echo "Running pre-compile hooks..."
+      for hook in ${docs_pre_hooks[@]}; do
+          hook="$(realpath "$docs_hooks_dir/$hook")"
+          echo_green "Hook file: $hook"
+          echo_yellow "$(do_hook_file "$hook")"
+      done
+    fi
 
     # Generate an outline from the file structure.
     if [[ ! "$docs_outline_file" ]]; then
+
         # Create $docs_outline_auto from the file contents
-        result=$($docs_php "$CORE/includes/files_to_json.inc" "$docs_source_path" "$docs_cache_dir/source" "$docs_cache_dir/$docs_outline_auto" "$docs_source_dir/$docs_outline_merge")
+        result=$($docs_php "$CORE/includes/files_to_json.inc" "$docs_source_path" "$docs_cache_dir/source" "$docs_cache_dir/$docs_outline_auto" "$docs_source_path/$docs_outline_merge")
+
         if [[ $? -ne 0 ]]; then
           echo_red "$result" && exit
         fi
@@ -314,17 +326,19 @@ function do_todos() {
   fi
 }
 
-#
 # Do the post-compile hook
 #
 function do_post_hooks() {
+
   local hook
-  echo "Running post-compile hooks..."
-  for hook in ${docs_post_hooks[@]}; do
-    hook=$(realpath "$docs_hooks_dir/$hook")
-    echo_green "`tty -s && tput setaf 2`Hook file: $hook`tty -s && tput op`"
-    echo_yellow "$(do_hook_file $hook)"
-  done
+  if [[ "${docs_post_hooks[0]}" ]]; then
+    echo "Running post-compile hooks..."
+    for hook in ${docs_post_hooks[@]}; do
+      hook=$(realpath "$docs_hooks_dir/$hook")
+      echo_green "`tty -s && tput setaf 2`Hook file: $hook`tty -s && tput op`"
+      echo_yellow "$(do_hook_file $hook)"
+    done
+  fi
 
   # Internal post hooks should always come after the user-supplied
   # Remove the _tasklist.md file

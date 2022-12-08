@@ -6,16 +6,18 @@
 
 use AKlump\Data\Data;
 use AKlump\LoftDocs\Compiler;
+use AKlump\LoftDocs\PageMetaData;
 use AKlump\LoftLib\Bash\Color;
-use Webuni\FrontMatter\FrontMatter;
 
 $file = __FILE__;
 require_once dirname($file) . '/../vendor/autoload.php';
 
-if (count($argv) < 3
-  || ((list(, $source_dir, $generated_dir, $json_file, $merge_file) = $argv)
-    && (empty($source_dir) || empty($json_file)))
-) {
+$source_dir = $argv[1];
+$generated_dir = $argv[2];
+$json_file = $argv[3];
+$merge_file = $argv[4];
+
+if (count($argv) < 3  || empty($source_dir) || empty($json_file)) {
   echo "Missing parameters to $file" . PHP_EOL;
 
   return;
@@ -34,18 +36,21 @@ $user = Compiler::indexSourceFiles($source_dir);
 $generated = Compiler::indexSourceFiles($generated_dir);
 $first_level = array_merge($user, $generated);
 
-$fm = new FrontMatter();
 $g = new Data();
 foreach ($first_level as $data) {
+  if (empty($data['filename'])) {
+    continue;
+  }
   $path = $data['path'];
   $file = $data['basename'];
-
-  $front_matter = array();
-  $contents = $body = '';
+  $front_matter = [];
+  $contents = '';
+  $body = '';
   if (is_file($path) && ($contents = file_get_contents($path))) {
-    $document = $fm->parse($contents);
-    $front_matter = $document->getData();
-    $body = $document->getContent();
+    $page_metadata = new PageMetaData([$data['dirname']]);
+    $page_metadata->setPageId($data['filename']);
+    $front_matter = $page_metadata->get();
+    $body = $page_metadata->getPage();
   }
 
   // Allow this file to be skipped for indexing.
